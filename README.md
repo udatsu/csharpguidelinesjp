@@ -1,12 +1,11 @@
-Coding Guidelines for C# 3.0, 4.0 and 5.0
+コーディング ガイドライン for C# 3.0, 4.0 and 5.0
 ================
 
 ##Description##
-A set of coding guidelines for C# 3.0, C# 4.0 and C# 5.0, design principles and layout rules for improving the overall quality of your code development. 
+C# コーディング ガイドライン C# 3.0, C# 4.0, C# 5.0, コードの品質を向上させるデザイン プリンシパルとレイアウト ルール
 
-##Important##
-This repository is only used to maintain the coding guidelines as well as receive pull requests. The official versions of the guidelines are published on the [official site](http://www.csharpcodingguidelines.com).
+##重要##
+このリポジトリは、[Dennis Doomenさんのリポジトリ](https://github.com/dennisdoomen/csharpguidelines)を日本語化したものです。オリジナルのリポジトリは、コーディングガイドラインの維持とプルリクエストを受けるために作成されています。公式版のガイドラインは[公式サイト](http://www.csharpcodingguidelines.com)で公開されており、日本語版も提供されています。
 
 ##Special Thanks##
-The conversion to Markdown would not have been possible without the support of [MarkdownPad 2](http://markdownpad.com/), a first class Windows application that understands all important variants of Markdown.   
-![MarkdownPad](./Resources/markdownpad2-weblogo.png)  
+リポジトリをフォークすることを快く許可していただいたDennisさんに感謝します。
