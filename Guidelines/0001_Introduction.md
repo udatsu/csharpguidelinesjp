@@ -2,75 +2,73 @@
 NOTE: Requires Markdown Extra. See http://michelf.ca/projects/php-markdown/extra/
  --> 
 
-#Introduction#
-##What is this?##
+#序章#
+##これはなにか？##
 
-This document attempts to provide guidelines (or coding standards if you like) for coding in C# 3.0, 4.0 or 5.0 that are both useful and pragmatic. Of course, if you create such a document you should practice what you preach. So rest assured, these guidelines are representative to what we at [Aviva Solutions](http://www.avivasolutions.nl) do in our day-to-day work. Of course, not all coding guidelines have a clear rationale. Some of them are simply choices we made at Aviva Solutions.
+このドキュメントは、C# 3.0、4.0、5.0 でコーディングする際の有用性と実用性の両方のガイドライン（とあなたが望むならコーディング標準）を提供する。もちろんあなたがこのようなドキュメントを作成した場合、あなたが説得して実践するべきである。このガイドラインは、[Aviva Solutions](http://www.avivasolutions.nl) で私たちが日々の仕事で行っていることの代表的なものなので安心して欲しい。もちろんすべてのガイドラインは明確な根拠をもっているわけではない。そのうちいくつかは、Aviva Solutions が選択したものである。
 
-Visual Studio's [Static Code Analysis](http://msdn.microsoft.com/en-us/library/dd264939.aspx) (which is also known as FxCop) and [StyleCop](http://stylecop.codeplex.com/) can already automatically enforce a lot of coding and design rules by analyzing the compiled assemblies. You can configure to do that at compile time or as part of a continuous or daily build. This document just adds additional rules and recommendations but its companion site [www.csharpcodingguidelines.com](http://www.csharpcodingguidelines.com) provides a list of code analysis rules depending on the type of code base you're dealing with.
+Visual Studio の[静的コード分析](http://msdn.microsoft.com/ja-jp/library/dd264939.aspx) （FxCop として知られる）と [StyleCop](http://stylecop.codeplex.com/) は、コンパイルされたアセンブリを分析することによって、自動的に多くのコーディングと設計ルールを強制することができる。それはコンパイル時または、日々のビルドの一部として継続するように構成することができる。このドキュメントは、追加ルールと推奨として追加することができるが、手引きサイトである [www.csharpcodingguidelines.com](http://www.csharpcodingguidelines.com) では、あなたの扱っているコードベースの種類に応じたコード分析のルールリストを提供する。
 
-##Why would I use this document?##
+##なぜこのドキュメントを使うのか？##
 
-Although some might see coding guidelines as undesired overhead or something that limits creativity, this approach has already proven its value for many years. Why? Well, because not every developer
+いくつかのコーディングガイドラインは、望まないオーバーヘッドやクリエイティビティの制限に見えるかもしれないが、このアプローチはすでに長年にわたって価値を証明している。なぜか？なぜなら、すべての開発者が以下に該当するわけではないが
 
-- is aware that code is generally read 10 times more than it is changed;
-- is aware of the potential pitfalls of certain constructions in C#;
-- is introduced into certain conventions when using the .NET Framework such as IDisposable or the deferred execution nature of LINQ;
-- is aware of the impact of using (or neglecting to use) particular solutions on aspects like security, performance, multi-language support, etc;
-- knows that not every developer is as capable in understanding an elegant, but abstract, solution as the original developer;
+- 開発者は、それが変更されるよりも10倍以上読まれることに気づいている
+- 開発者は、C#で構築したときの落とし穴になる可能性があることに気づいている
+- 開発者は、IDisposableやLINQの遅延実行など.NET Frameworkを使った時の特定の規則になじむ
+- 開発者は、セキュリティ、パフォーマンス、多言語対応などの側面で、特定のソリューションを使った時（あるいは使うのを避けること）のインパクトに気づいている
+- すべての開発者が、元の開発者と同じく、精錬された（ではあるが抽象的な）ソリューションを理解することができるわけではないことを知っている
 
-##Basic Principles##
+##基本原則##
 
-There are many unexpected things I run into during my work as a consultant, each deserving at least one guideline. Unfortunately, I still need to keep this document within a reasonable size. But unlike to what some junior developers believe, that doesn't mean that when something is not mentioned in this guidelines it must be okay.
+私がコンサルタントとして作業していると多くの予測していないことがあり、それぞれ1つのガイドラインに値する。残念ながら、私はドキュメントが適切なサイズを維持する必要があると考えている。経験の浅い開発者が信じているものとは違い、このガイドラインに記述されていないからと言ってそれは大丈夫であることを意味するわけではない。
 
-In general, if I have a discussion with a colleague about a smell that this document does not provide absolution for, I'll refer back to a set of basic principles that apply to all situations, regardless of context. These include:
+一般的にこのドキュメントで免罪にはならないようなきな臭いものは、同僚と議論して、コンテキストに関係なく、すべての状況に適用される基本原則に立ち返ってみる。それには以下のものが含まれている:
 
-- The Principle of Least Surprise (or Astonishment), which means that you should choose a solution that does include any things people might not understand, or put on the wrong track.
-- Keep It Simple Stupid (a.k.a. KISS), a funny way of saying that the simplest solution is more than sufficient.
-- You Ain't Gonne Need It (a.k.a. YAGNI), which tells you to create a solution for the current problem rather than the ones you think will happen later on (since when can you predict the future?)
-- Don't Repeat Yourself (a.k.a. DRY), which encourages you to prevent duplication in your code base without forgetting the [Rule of Three](http://lostechies.com/derickbailey/2012/10/31/abstraction-the-rule-of-three/) heuristic.
+- The Principla of Least Surprise(最小の驚きの原則) は、ソリューションには人々が理解できないものや、間違った方向に入るものを含むべきではないことを意味する。
+- Keep It Simple Stupid (KISSとして知られる) は、「もっとも単純な解放は十分な（最低限、機能する）ものよりよい」の冗談めいた言い方。
+- You Ain’t Gonne Need It (YAGNIとして知られる)は、将来起こること（あなたはいつから将来を予測できる？）よりも現在の問題に対するソリューションを作成するように指示している。
+- Don’t Repeat Yourself (DRYとして知られる)は、 [Rule of Three](http://lostechies.com/derickbailey/2012/10/31/abstraction-the-rule-of-three/)  ヒューリスティックを忘れずに、あなたのコードベースで重複を避けることを推奨している。
 
-Regardless of the elegancy of somebody's solution, if it's too complex for the ordinary developer, exposes unusual behavior, or tries to solve many possible future issues, it is very likely the wrong solution and needs redesign.
+そのエレガントさとは無関係に、誰かのソリューションが、普通の開発者には複雑すぎたり、一般的じゃない振る舞いを公開したり、多くの将来の問題を引き起こす可能性がある場合、それは大幅に間違っているか再設計が必要である。
 
-##How do I get started?##
+##どうやって始めればよい？##
 
-- Ask all developers to carefully read this document at least once. This will give them a sense of the kind of guidelines the document contains. 
-- Make sure there are always a few hard copies of the [Quick Reference](http://www.csharpcodingguidelines.com/) close at hand. 
-- Include the most critical coding guidelines on your [Project Checklist](http://www.dennisdoomen.net/2010/03/alm-practices-5-checklists.html) and verify the remainder as part of your [Peer Review](http://www.dennisdoomen.net/2010/02/tfs-development-practices-part-2-peer.html). 
-- Decide which CA rules are applicable for your project and write these down somewhere, such as your TFS team site, or create a custom Visual Studio 2010/2012 Rule Set. The [companion site](http://www.csharpcodingguidelines.com/) offers rule sets for both line-of-business applications and more generic code bases like frameworks and class libraries.
-- Add a custom [Code Analysis Dictionary](http://msdn.microsoft.com/en-us/library/bb514188.aspx) containing your domain- or company-specific terms, names and concepts. If you don't, Static Analysis will report warnings for (parts of) phrases that are not part of its internal dictionary. 
-- Configure Visual Studio to verify the selected CA rules as part of the Release build. Then they won't interfere with normal developing and debugging activities, but still can be run by switching to the Release configuration. 
-- Add an item to your project checklist to make sure all new code is verified against CA violations, or use the corresponding [Check-in Policy](http://msdn.microsoft.com/en-us/library/ms182075(v=vs.110).aspx) if you want to prevent any code from violating CA rules at all. 
-- [ReSharper](http://www.jetbrains.com/resharper/) has an intelligent code inspection engine that, with some configuration, already supports many aspects of the Coding Guidelines. It will automatically highlight any code that does not match the rules for naming members (e.g. Pascal or Camel casing), detect dead code, and many other things. One click of the mouse button (or the corresponding keyboard shortcut) is usually enough to fix it. 
-- ReSharper also has a File Structure window that shows an overview of the members of your class or interface and allows you to easily rearrange them using a simple drag-and-drop action. 
-- Using [GhostDoc](http://submain.com/products/ghostdoc.aspx) you can generate XML comments for any member using a keyboard shortcut. The beauty of it, is that it closely follows the MSDN-style of documentation. However, you have to be careful not to misuse this tool, and use it as a starter only. 
+- すべての開発者が少なくても一度はこのドキュメントをきちんと読むように依頼する。これは彼らにドキュメントに含まれるガイドラインの主旨を伝える。
+- いくつかの [Quick Reference](http://www.csharpcodingguidelines.com/) のハードコピーが常に手元に存在していることを確認する。
+- あなたの[プロジェクトチェックリスト](http://www.dennisdoomen.net/2010/03/alm-practices-5-checklists.html) にもっとも重要なコーディングガイドラインに含めて、あなたの[ピアレビュー](http://www.dennisdoomen.net/2010/02/tfs-development-practices-part-2-peer.html)での検証の一部に含める。
+- どのCAルールをプロジェクトに含めるべきかを決めて、TFSチームサイトなどに書き留めるか、Visual Studio 2010/2012のカスタムルールセットを作成する。[手引きサイト](http://www.csharpcodingguidelines.com/)では、基幹業務アプリケーションと、フレームワークやクラスライブラリのような、より一般的なコードベースの両方に対するルールセットを提供している。
+- あなたのドメインや会社特有の用語、名前、コンセプトをカスタム[コード分析ディクショナリ](http://msdn.microsoft.com/ja-jp/library/bb514188.aspx)に追加する。そうしないと、静的分析は内部辞書に含まれないフレーズ（の一部）を警告として報告してくる。
+- リリースビルドの一部としてCAルールを検証するようにVisual Studioを構成する。それによって通常の開発とデバッグ作業を邪魔することはないが、Release構成に切り替えたときに実行することができる。
+- 新しいコードがCA違反をしていないかを検証するためにプロジェクトのチェックリストにアイテムを追加して、完全にCAルール違反から防ぎたい場合は、[チェックインポリシー](http://msdn.microsoft.com/ja-jp/library/ms182075(v=vs.110).aspx)を使用する。
+- [ReSharper](http://www.jetbrains.com/resharper/) は、インテリジェントなコード検証エンジンであり、いくつかの構成を行うことでコーディングガイドラインの多くの側面をすでにサポートしている。命名規則に一致しないコード（PascalやCamel case）を自動的にハイライトして、未使用のコードを検出し、その他多くのことをしてくれる。マウスボタンを一度クリック（か、それに対応するキーボードのショートカット）すると、それを修正してくれる。
+- ReSharperはまた、あなたのクラスやインターフェイスのメンバーの概要を表示して、簡単にドラッグ・アンド・ドロップ操作で再配置できるファイル構造ウィンドウを持っている。
+- [GhostDoc](http://submain.com/products/ghostdoc.aspx) を使うと、キーボードショートカットを使ってあらゆるメンバーのXMLコメントを生成することができる。これのすばらしい点は、MSDNスタイルのドキュメントに近いということである。しかしながら、このツールが入り口だけであることを勘違いしないように注意する必要がある。
 
-##Why did you create it?##
+##なぜこれを作ったのか？##
 
-The idea started in 2002 when Vic Hartog (Philips Medical Systems) and I were assigned the task of writing up a [coding standard](http://www.tiobe.com/content/paperinfo/gemrcsharpcs.pdf) for C# 1.0.Since then, I've regularly added, removed and changed rules based on experiences, feedback from the community and new tooling support such as offered by Visual Studio 2010.
+アイディアは、2002年にVic Hartog (Philips Medical Systems)と私がC# 1.0の[コーディング標準](http://www.tiobe.com/content/paperinfo/gemrcsharpcs.pdf)を作成する作業にアサインされたときに始まった。その後私は、定期的に経験や、コミュニティからのフィードバック、Visual Studio 2010の提供する新しいツールなどのサポートに応じてルールの追加、削除、変更を行ってきた。さらに、[Robert C. Martin](http://www.objectmentor.com/omTeam/martin_r.html)の本[Clean Code: A Handbook of Agile Software Craftsmanship](http://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882) を読んだ後、私は彼のアイディアの大ファンになり、彼のテイストや経験則をガイドラインとして含めることを決定した。このドキュメントが彼の本を置き換えるものになると気づくかもしれない。私は心から、彼の推奨する背後にある根拠をきちんと理解するために本を読むことをお薦めする。
 
-Additionally, after reading [Robert C. Martin](http://www.objectmentor.com/omTeam/martin_r.html)'s book [Clean Code: A Handbook of Agile Software Craftsmanship](http://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882), I became a big fan of his ideas and decided to include some of his smells and heuristics as guidelines. Notice though that this document is in no way a replacement for his book. I sincerely recommend that you read his book to gain a solid understanding of the rationale behind his recommendations.
+私はまた、シンプルなコーディングガイドラインに加えていくつかの設計ガイドラインを含めることを決めた。これは高いコードの品質に到達するために無視することができない重要な影響を持つものである。
 
-I've also decided to include some design guidelines in addition to simple coding guidelines. They are too important to ignore and have a big influence in reaching high quality code.
+##これはコーディング標準なのか？##
+ 
+どのドキュメントは、プロジェクトが絶対にこれらのガイドラインを守らなくてはならないものとは位置づけておらず、どちらのガイドラインが他よりも重要であるとも言っていない。私たちは、彼ら自身でどのガイドラインが重要で、どれをプロジェクトでの使用からはずすべきか、疑問が生じたときに誰がコンサルタントなのか、どのレイアウトをソースコードで使用するべきかを決めることを推奨する。明らかにあなたが実際にコーディングを始める前に決めておくべきである。
 
-##Is this a coding standard?##
+あなたの決定を助けるために、それぞれのガイドラインに重要度を割り当てた:
 
-The document does not state that projects must comply with these guidelines, neither does it say which guidelines are more important than others. However,we encourage projects todecide themselves what guidelines are important, what deviations a project will use, who is the consultant in case doubts arise, and what kind of layout must be used for source code. Obviously, you should make these decisions before starting the real coding work.
+![](images/1.png) あなたがスキップしてはいけない、すべての状況で適用すべきガイドライン
 
-To help you in this decision, I've assigned a level of importance to each guideline:
+![](images/2.png) 強くお薦めするガイドライン
 
-![](images/1.png) Guidelines that you should never skip and should be applicable to all situations
+![](images/3.png) すべての状況で適用する必要はないが、推奨するガイドライン
 
-![](images/2.png) Strongly recommended guidelines
+一般的に、生成されたコードはコーディングガイドラインに準拠している必要はない。しかし、コードの生成に使用しているテンプレートの修正が可能であれば、可能な限り準拠したコードが生成できるように試してみる。
 
-![](images/3.png) that may not be applicable in all situations
+##フィードバックと免責事項##
 
-In general, generated code should not need to comply with coding guidelines. However, if it is possible to modify the templates used for generation, try to make them generate code that complies as much as possible.
+このドキュメントは、多くのコミュニティメンバー、ブログ投稿、オンラインディスカッションと長年のC#での開発による貢献を使用して構築されている。もし疑問、コメント、提案がある場合、[dennis.doomen@avivasolutions.nl](mailto:dennis.doomen@avivasolutions.nl) 宛てのEメールか、[http://twitter.com/ddoomen](http://twitter.com/ddoomen) へのツイートで教えて欲しい。私は定期的に新しい洞察、経験、発言を元にこのドキュメントを改訂して、再発行しようと考えている。
 
-##Feedback and disclaimer##
+これは単にC#コードに対する私の視点での最適な見解を反映しているため、Aviva Solutionsは、直接的、間接的に関わらず、このドキュメントのガイドラインによって生じた損害に対して一切の責任を負わない。
 
-This document has been compiledusing many contributions from community members,blog posts, on-line discussionsand many years of developing in C#. If you have questions, comments or suggestions, just let me know by sendingme an email at [dennis.doomen@avivasolutions.nl](mailto:dennis.doomen@avivasolutions.nl) or tweet me at [http://twitter.com/ddoomen](http://twitter.com/ddoomen). I will try to revise and republish this document with new insights, experiences and remarks on a regular basis.
-
-Notice though that it merely reflects my view on proper C# code so Aviva Solutions will not be liable for any direct or indirect damages caused by applying the guidelines of this document.
-
-It is allowed to copy, adapt, and redistribute this document and its companion quick reference guide for non-commercial purposes or internal usage. However, you may not republish this document, or publish or distribute any adaptation of this document for commercial use without first obtaining express written approval from Aviva Solutions.
+このドキュメントとクイックリファレンスガイドは、非商用目的と内部利用に限りコピー、適用、および再配布を許可する。Aviva Solutionsの許可を得ることなく、このドキュメントの再発行、または商業利用のためのいかなる適用、発行、配布を禁じる。日本語訳に関する疑問や質問、もしくは日本語でのフィードバックについては、本ドキュメントを翻訳した尾崎　義尚([yoshioms@gmail.com](yoshioms@gmail.com))  までメールをいただくか、[http://twitter.com/yoshioms](http://twitter.com/yoshioms) にツイートして欲しい。
