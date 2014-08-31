@@ -2,95 +2,98 @@
 NOTE: Requires Markdown Extra. See http://michelf.ca/projects/php-markdown/extra/
  --> 
 
-#Miscellaneous Design Guidelines
+#その他のデザインガイドライン
 
-### Throw exceptions rather than returning some kind of status value (AV1200) ![](images/2.png)
+### いくつかの種類のステータスで返すよりも例外をスローする (AV1200) ![](images/2.png)
 
-A code base that uses return values for reporting the success or failure tends to have nested if-statements sprinkled all over the code. Quite often, a caller forgets to check the return value anyhow. Structured exception handling has been introduced to allow you to throw exceptions and catch or replace exceptions at a higher layer. In most systems it is quite common to throw exceptions whenever an unexpected situations occurs.
+成功か失敗かを報告する値を返すコードベースでは、ネストされたifステートメントですべてのコードで振り分けする傾向にある。呼び出し元はよく戻り値のチェックを忘れる。構造化例外ハンドリングは、例外のスロー、高いレイヤでのキャッチや例外の置き換えを許可している。ほとんどのシステムで、予期しない状況での例外のスローはとても一般的である。
 
-### Provide a rich and meaningful exception message text (AV1202) ![](images/2.png)
+### リッチで意味のある例外メッセージテキストを提供する (AV1202) ![](images/2.png)
 
-The message should explain the cause of the exception and clearly describe what needs to be done to avoid the exception.
+メッセージは、例外が発生した理由を説明して、例外を避けるためにはどうする必要があるかを明確に説明する必要がある。
 
-### Throw the most specific exception that is appropriate (AV1205) ![](images/3.png)
+### もっとも適した例外をスローする (AV1205) ![](images/3.png)
 
-For example, if a method receives a `null` argument, it should throw `ArgumentNullException` instead of its base type `ArgumentException`.
+例えば、メソッドが引数に`null`を受け取った場合、基本型の`ArgumentException`ではなく、`ArgumentNullException`をスローするべきである。
 
-### Don't swallow errors by catching generic exceptions  (AV1210) ![](images/1.png)
+### 汎用的な例外キャッチでエラーを飲み込まない (AV1210) ![](images/1.png)
 
-Avoid swallowing errors by catching non-specific exceptions, such as Exception, SystemException, and so on, in application code. Only top-level code, such as a last-chance exception handler, should catch a non-specific exception for logging purposes and a graceful shutdown of the application.
+アプリケーションのコードでException、SystemExceptionなど明示的でない例外をキャッチしてエラーを飲み込むことは避ける。例外を処理する最後のチャンスであるトップレベルのコードでは、ロギングの目的で明示的でない例外をキャッチして、きちんとアプリケーションを終了させるべきである。
 
-### Properly handle exceptions in asynchronous code (AV1215) ![](images/2.png)
-When throwing or handling exceptions in code that uses `async`/`await` or a `Task` remember the following two rules
+### 非同期コード内の例外をきちんと処理する (AV1215) ![](images/2.png)
 
-- Exceptions that occur within an `async`/`await` block and inside a `Task`'s action are propagated to the awaiter.
-- Exceptions that occur in the code preceding the asynchronous block are propagated to the caller.
+`async`/`await`や`Task`のコードで例外をスローまたは処理するときは、以下の2つのルールを忘れてはいけない。
 
-### Always check an event handler delegate for `null` (AV1220) ![](images/1.png)
+- `async`/`await` ブロックと`Task`のアクション で例外が発生したときは、`await`しているものに伝搬される
+- 非同期ブロックの前のコードで発生した例外は、呼び出し元に伝搬される
 
-An event that has no subscribers is `null`, so before invoking, always make sure that the delegate list represented by the event variable is not `null`. Furthermore, to prevent conflicting changes from concurrent threads, use a temporary variable to prevent concurrent changes to the delegate.
+### 常にイベントハンドラの`null`をチェックする (AV1220) ![](images/1.png)
 
-	event EventHandler Notify;
-	
-	void RaiseNotifyEvent(NotifyEventArgs args)  
+イベントのサブスクライバが存在しない場合`null`になるため、呼び出す前にデリゲートリストであるイベント変数が`null`でないことを確認する。さらに同時実行スレッドからの変更が競合することを防ぐために、一時変数を使用する。
+
+	event EventHandler<NotifyEventArgs> Notify;
+
+	void RaiseNotifyEvent(NotifyEventArgs args)
 	{
-		EventHandler handlers = Notify;  
-		if (handlers != null)  
-		{  
-		    handlers(this, args); 
-		
-		}
+		EventHandler<NotifyEventArgs> handlers = Notify;
+	 	if (handlers != null)
+ 		{
+	   	   handlers(this, args);   
+	  	}
 	}
 
-**Tip** You can prevent the delegate list from being empty altogether. Simply assign an empty delegate like this:
+**Tip** 完全に空のデリゲートリストを防ぐために、このように空のデリゲートを割り当ててもよい:
 
-	event EventHandler Notify = delegate {};
+	event EventHandler<NotifyEventArgs> Notify = delegate {};
 
-### Use a protected virtual method to raise each event (AV1225) ![](images/2.png)
-Complying with this guideline allows derived classes to handle a base class event by overriding the protected method. The name of the protected virtual method should be the same as the event name prefixed with `On`. For example, the protected virtual method for an event named `TimeChanged` is named `OnTimeChanged`.
+### 各イベントを発生させるためにprotected virtualメソッドを使用する (AV1225) ![](images/2.png)
 
-**Note** Derived classes that override the protected virtual method are not required to call the base class implementation. The base class must continue to work correctly even if its implementation is not called.
+このガイドラインを遵守すると、`protected`メソッドをオーバーライドすることで、派生クラスからベースクラスのイベントを処理することができる。`protected virtual`メソッドの名前は、イベントと同じ名前に`On`をつけた名前にするべきである。たとえば、`TimeChanged`というイベントの`protected virtual`メソッドは`OnTimeChanged`という名前にする。
 
-### Consider providing property-changed events (AV1230) ![](images/3.png)
-Consider providing events that are raised when certain properties are changed. Such an event should be named `PropertyChanged`, where `Property` should be replaced with the name of the property with which this event is associated
+**Note** `protected virtual`メソッドをオーバーライドした派生クラスは、ベースクラスの実装を呼び出す必要はない。ベースクラスは、実装が呼び出されなかったとしても正しく動作できなくてはならない。
 
-**Note** If your class has many properties that require corresponding events, consider implementing the `INotifyPropertyChanged` interface instead. It is often used in the [Presentation Model](http://martinfowler.com/eaaDev/PresentationModel.html) and [Model-View-ViewModel](http://msdn.microsoft.com/en-us/magazine/dd419663.aspx) patterns.
+### プロパティ変更イベントの提供を検討する (AV1230) ![](images/3.png)
 
-### Don't pass `null` as the `sender` argument when raising an event  (AV1235) ![](images/1.png)
+プロパティが変更された時に発生するイベントの提供を検討する。`PropertyChanged`という名前のイベントを付けるべきで、`Property`はこのイベントに関連づけられたプロパティの名前に置き換えられるべきである。
 
-Often, an event handler is used to handle similar events from multiple senders. The sender argument is then used to get to the source of the event. Always pass a reference to the source (typically this) when raising the event. Furthermore don't pass `null` as the event data parameter when raising an event. If there is no event data, pass `EventArgs.Empty` instead of `null`.
+**Note** クラスが、対応するイベントが必要な多くのプロパティを持っている場合、`INotifyPropertyChanged`インターフェイスの実装を検討する。これは[プレゼンテーションモデル](http://martinfowler.com/eaaDev/PresentationModel.html)と[Model-View-ViewModel](http://msdn.microsoft.com/en-us/magazine/dd419663.aspx)パターンでよく使用されている。
 
-**Exception** On static events, the sender argument should be `null`.
+### イベントを発生させる時sender 引数としてnullを渡すべきではない (AV1235) ![](images/1.png)
 
-### Use generic constraints if applicable (AV1240) ![](images/2.png)
-Instead of casting to and from the object type in generic types or methods, use `where` constraints or the `as` operator to specify the exact characteristics of the generic parameter. For example:
+たびたび、複数の送信者からの同じようなイベントをひとつのイベントハンドラで処理することがある。sender引数は、イベントのソースを取得するために使われる。イベントを発生させるときは、常にソースの参照(通常はthis) を渡すようにする。イベントを派生させるときにイベントデータパラメータに`null`を渡してはならない。もしイベントデータが存在しない場合は、`null`ではなく、`EventArgs.Empty`を渡すようにする。
 
-	class SomeClass  
+**例外** 静的イベントでは、sender引数は`null`でなくてはならない。
+
+### 該当する場合は、ジェネリック制約を使用する (AV1240) ![](images/2.png)
+
+ジェネリック型かメソッドのobject型からキャストする代わりに`where`制約や`as`演算子をジェネリックパラメータの正確な特性を指定するために使用する。例えば:
+
+	class SomeClass
 	{}
-	
-	// Don't  
-	class MyClass  
+
+	// Don't
+	class MyClass<T>
 	{
-		void SomeMethod(T t)  
-		{  
-			object temp = t;  
-			SomeClass obj = (SomeClass) temp;  
-		}  
+		void SomeMethod(T t)
+	 	{
+  			object temp = t;
+  			SomeClass obj = (SomeClass) temp;
+ 		}
 	}
 	
-	// Do  
-	class MyClass where T : SomeClass  
+	// Do
+	class MyClass<T> where T : SomeClass
 	{
-		void SomeMethod(T t)  
-		{  
-			SomeClass obj = t;  
-		}  
+		void SomeMethod(T t)
+	 	{
+	  		SomeClass obj = t;
+	 	}
 	}
 
-### Evaluate the result of a LINQ expression before returning it  (AV1250) ![](images/1.png)
+### LINQ式を戻り値として返す前に評価する  (AV1250) ![](images/1.png)
 
-Consider the following code snippet
-	
+以下のコードスニペットを考えてみよう
+
 	public IEnumerable GetGoldMemberCustomers()
 	{
 		const decimal GoldMemberThresholdInEuro = 1000000;
@@ -103,4 +106,4 @@ Consider the following code snippet
 		return query;  
 	}
 
-Since LINQ queries use deferred execution, returning `query` will actually return the expression tree representing the above query. Each time the caller evaluates this result using a `foreach` or something similar, the entire query is re-executed resulting in new instances of `GoldMember` every time. Consequently, you cannot use the `==` operator to compare multiple `GoldMember` instances. Instead, always explicitly evaluate the result of a LINQ query using `ToList()`, `ToArray()` or similar methods.
+LINQクエリは遅延実行を使用しているため、実際には`query`は上記のクエリを表現する式木を返す。呼び出し元は、`foreach`などを使って毎回この結果を評価し、クエリ全体が再実行された結果`GoldMember`の新しいインスタンスが返される。そのため、複数の`GoldMember`インスタンスを比較するために`==`演算子を使用することはできない。その代わり、`ToList()`や`ToArray()`などのメソッドを使ってLINQクエリの結果を明示的に評価する。
