@@ -2,106 +2,106 @@
 NOTE: Requires Markdown Extra. See http://michelf.ca/projects/php-markdown/extra/
  --> 
 
-#Class Design Guidelines
+#クラス・デザインガイドライン
 
-###A class or interface should have a single purpose (AV1000) ![](images/1.png)
+###クラスやインターフェイスはひとつの役割だけを持つようにする (AV1000) ![](images/1.png)
 
-A class or interface should have a single purpose within the system it participates in. In general, a class is either representing a primitive type like an email or ISBN number, an abstraction of some business concept, a plain data structure or responsible for orchestrating the interaction between other classes. It is never a combination of those. This rule is widely known as the [Single Responsibility Principle](http://www.objectmentor.com/resources/articles/srp.pdf), one of the SOLID principles.
+A クラスやインターフェイスはそれが参加しているシステムの中で単一の目的を持つべきである。一般的にクラスは、emailやISBNのようなプリミティブ型、業務を抽象化したもの、プレーンなデータ構造、もしくは、複数のクラス間での対話によるオーケストレーションを行う責任があるものなどが存在するが、それらが組み合わさることはない。このルールは、SOLID原則のひとつである[単一責務の原則](http://www.objectmentor.com/resources/articles/srp.pdf)として知られている。
 
-**Tip** A class with the word And in it is an obvious violation of this rule.
+**Tip** Andという単語が含まれるクラスは明らかにルール違反である。
 
-**Tip** Use [Design Patterns](http://en.wikipedia.org/wiki/Design_pattern_(computer_science)) to communicate the intent of a class. If you can't assign a single design pattern to a class, chances are that it is doing more than one thing.
+**Tip** クラスの意図を伝えるために[デザインパターン](http://en.wikipedia.org/wiki/Design_pattern_(computer_science))を使用する。もしひとつのデザインパターンを割り当てることができない場合、ひとつ以上のことをしようとしている可能性がある。
 
-**Note** If you create a class representing a primitive type you can greatly simplify it usage by making it immutable.
+**Note** プリミティブ型を表現するクラスを作る場合は、不変(immutable)にすることで非常にシンプルにすることができる。
 
-###Only create a constructor that returns a useful object (AV1001) ![](images/3.png)
+###使えるオブジェクトを返すコンストラクターだけを作成する (AV1001) ![](images/3.png)
 
-There should be no need to set additional properties before the object can be used for whatever purpose it was designed. However, if you your constructor needs more than three parameters (which violates AV1561), your class might have too much responsibility (and violate AV1000).
+オブジェクトが使用可能になるまでに追加でプロパティに値をセットする必要がないように設計する。ただし、コンストラクターに3つより多いパラメータが必要 (AV1561に違反している) な場合、そのクラスは責務を持ちすぎている (AV1000に違反) 可能性がある。
 
-###An interface should be small and focused (AV1003) ![](images/2.png)
+###インターフェイスは小さく、集中的であるべきである (AV1003) ![](images/2.png)
 
-Interfaces should have a name that clearly explains the purpose or role of that interface within the system. Do not combine many vaguely related members on the same interface just because they were all on the same class. Separate the members based on the responsibility of those members so that callers only need to call or implement the interface related to a particular task. This rule is more commonly known as the [Interface Segregation Principle](http://www.objectmentor.com/resources/articles/isp.pdf).
+インターフェイスは、システムの中のインターフェイスの目的と役割を明確に説明できる名前を持つべきである。同じクラスで使用するからと言って、ひとつのインターフェイスに関連性の薄いメンバーを組み合わせてはならない。メンバーの責務を元にメンバーを分離して、呼び出し元は特定のタスクに関連するインターフェイスを呼び出すか実装するだけでよい。このルールは[インターフェイス分離原則](http://www.objectmentor.com/resources/articles/isp.pdf).として一般的に知られている。
 
-###Use an interface rather than a base class to support multiple implementations (AV1004) ![](images/3.png)
+###複数の実装をサポートするためにベースクラスではなくインターフェイスを使用する (AV1004) ![](images/3.png)
 
-If you want to expose an extension point from your class, expose it as an interface rather than a base class. You don't want to force users of that extension point to derive their implementations from a base-class that might have undesired behavior. However, for their convenience you may implement an (abstract) default implementation that can serve as a starting point.
+クラスに拡張ポイントを公開したい場合、ベースクラスではなくインターフェイスを公開した方がよい。拡張ポイントのユーザーが望まない動作をするベースクラスの実装を強要したくないはずだ。ただし、開始点としてデフォルト実装(abstract)を提供することで便利になるかもしれない。
 
-###Use an interface to decouple classes from each other (AV1005) ![](images/2.png)
+###クラスを分離するためにインターフェイスを使用する (AV1005) ![](images/2.png)
 
-Interfaces are a very effective mechanism for decoupling classes from each other.
+インターフェイスはクラスを切り離すために非常に効果的なメカニズムである。
 
-- They can prevent bidirectional associations; 
-- They simplify the replacement of one implementation with another; 
-- They allow replacing an expensive external service or resource with a temporary stub for use in a non-production environment.
-- They allow replacing the actual implementation with a dummy implementation or a fake object in a unit test; 
-- Using a dependency injection framework you can centralize the choice which class is going to be used whenever a specific interface is requested.
+- 双方向の関係性を防ぐことができる 
+- 別の実装に置き換えることが容易である
+- 本番環境以外で高価な外部サービスやリソースを一時的にスタブに置き換えることができる
+- ユニットテストでダミー実装やフェイクオブジェクトに置き換えることができる
+- 特定のインターフェイスが要求されても、依存性注入フレームワークを使って、どのクラスを選択するかを集中管理できる 
 
-###Avoid static classes (AV1008) ![](images/3.png)
+###静的クラスを避ける (AV1008) ![](images/3.png)
 
-With the exception of extension method containers static classes very often lead to badly designed code. They are also very difficult, if not impossible, to test in isolation unless you're willing to use some very hacky tools.
+拡張メソッドコンテナをのぞいて静的なクラスは粗悪な設計のコードに繋がることが多い。またすごいハックツールを使いたい場合を除いて、テストの分離が難しくなる。
 
-**Note** If you really need that static class, mark it as static so that the compiler can prevent instance members and instantiating your class. This relieves you of creating an explicit private constructor.
+**Note** 静的クラスがどうしても必要な場合、Staticとしてマークしてコンパイラがインスタンスメンバーとクラスをインスタンス化することを防ぐようにする。これで明示的なprivateコンストラクターを作成する必要がなくなる。
 
-###Don't hide inherited members with the new keyword (AV1010) ![](images/1.png)
+###継承メンバーを newキーワードで隠すべきではない (AV1010) ![](images/1.png)
 
-Not only does the new keyword break [Polymorphism](http://en.wikipedia.org/wiki/Polymorphism_in_object-oriented_programming), one of the most essential object-orientation principles, it also makes subclasses more difficult to understand. Consider the following two classes:
+new キーワードは、もっとも本質的なオブジェクト指向原則のひとつである[ポリモーフィズム](http://en.wikipedia.org/wiki/Polymorphism_in_object-oriented_programming)を壊すだけでなく、 サブクラスを理解することがより難しくなる。以下の2つのクラスについて考えてみよう:
 
-	public class Book  
+	public class Book
 	{
-		public virtual void Print()  
-		{
+		public virtual void Print()
+	 	{
 			Console.WriteLine("Printing Book");
-		}  
+		}
 	}
-	
-	public class PocketBook : Book  
+
+	public class PocketBook : Book
 	{
 		public new void Print()
 		{
 			Console.WriteLine("Printing PocketBook");
-		}  
+		}
 	}
 
-This will cause behavior that you would not normally expect from class hierarchies:
+これは、通常のクラス階層からは予期できない振る舞いが発生する:
 
-	PocketBook pocketBook = new PocketBook();
+	PocketBook pocketBook = new PocketBook();  
 	
-	pocketBook.Print(); // Will output "Printing PocketBook "
-	
-	((Book)pocketBook).Print(); // Will output "Printing Book"
+	pocketBook.Print(); 		// "Printing PocketBook "と出力される
 
-It should not make a difference whether you call Print through a reference to the base class or through the derived class.
+	((Book)pocketBook).Print(); 	// "Printing Book"と出力される
 
-###It should be possible to treat a derived object as if it were a base class object (AV1011) ![](images/2.png)
+このようにベースクラスを参照するか、継承クラスを参照するかによってPrintメソッドの呼び出し結果に違いを生み出すべきではない。
 
-In other words, you should be able to use a reference to an object of a derived class wherever a reference to its base class object is used without knowing the specific derived class. A very notorious example of a violation of this rule is throwing a NotImplementedException when overriding some of the base-class methods. A less subtle example is not honoring the behavior expected by the base-class.   
-  
-**Note** This rule is also known as the Liskov Substitution Principle, one of the [S.O.L.I.D.](http://www.lostechies.com/blogs/chad_myers/archive/2008/03/07/pablo-s-topic-of-the-month-march-solid-principles.aspx) principles.
+###派生クラスは、ベースクラスであるかのうように処理を実行できなくてはならない (AV1011) ![](images/2.png)
 
-###Don't refer to derived classes from the base class (AV1013) ![](images/1.png)
+言い換えれば、派生クラスを参照された場合でも、派生クラスを知らなくてもベースクラスの参照と同じように使用できるようにするべきである。このルールに違反している有名な例として、ベースクラスのいくつかのメソッドをオーバーライドしたときにNotImplementedException をスローするというものである。少ない微妙な例では、ベースクラスが期待している振る舞いを尊重していない。
 
-Having dependencies from a base class to its sub-classes goes against proper object-oriented design and might prevent other developers from adding new derived classes.
+**Note** このルールは、[S.O.L.I.D.](http://www.lostechies.com/blogs/chad_myers/archive/2008/03/07/pablo-s-topic-of-the-month-march-solid-principles.aspx) 原則のひとつであるリスコフの置換原則としても知られている。
 
-###Avoid exposing the other objects an object depends on (AV1014) ![](images/2.png)
+###ベースクラスから派生クラスを参照しない (AV1013) ![](images/1.png)
 
-If you find yourself writing code like this then you might be violating the [Law of Demeter](http://en.wikipedia.org/wiki/Law_of_Demeter).
+ベースクラスがサブクラスに依存することは、適切なオブジェクト指向設計に反する上に、ほかの開発者が新しい派生クラスを追加することを阻むことになる。
+
+###オブジェクトが依存するほかのオブジェクトを公開するのを避ける (AV1014) ![](images/2.png)
+
+あなたの書いたコードにこれがある場合、[デメテルの法則](http://en.wikipedia.org/wiki/Law_of_Demeter)に違反している可能性がある。
 
 	someObject.SomeProperty.GetChild().Foo()
 
-An object should not expose any other classes it depends on because callers may misuse that exposed property or method to access the object behind it. By doing so, you allow calling code to become coupled to the class you are using, and thereby limiting the chance you can easily replace it in a future stage.
+呼び出し元が後方にあるオブジェクトにアクセスするために、誤って公開されたプロパティやメソッドを使用してしまう可能性があるため、オブジェクトは依存するほかのクラスを公開するべきではない。これをしてしまうと、あなたが使っているクラスと結合することができるようになってしまい、将来それを置き換える機会を制限してしまう。
 
-**Note** Using a class that is designed using the [Fluent Interface](http://en.wikipedia.org/wiki/Fluent_interface) pattern does seem to violate this rule, but it is simply returning itself so that method chaining is allowed.
+**Note** 流れるようなインターフェイスパターンを使ったクラスはこのルールに違反しているように見えるが、メソッドチェーンを可能にするために自分自身を返しているだけである。
 
-**Exception** Inversion of Control or Dependency Injection frameworks often require you to expose a dependency as a public property. As long as this property is not used for anything else than dependency injection I would not consider it a violation.
+**例外** 制御の反転や依存性注入フレームワークは依存性をpublicプロパティで公開する必要があることがある。このプロパティが依存性注入にのみ使われているのであれば、私は違反だとは考えない。
 
-### Avoid bidirectional dependencies (AV1020) ![](images/1.png)
+### 双方向の依存を避ける (AV1020) ![](images/1.png)
 
-This means that two classes know about each other's public members or rely on each other's internal behavior. Refactoring or replacing one of those two classes requires changes on both parties and may involve a lot of unexpected work. The most obvious way of breaking that dependency is introducing an interface for one of the classes and using Dependency Injection.
+これは、2つのクラスがお互いのpublicメンバーやお互いの内部動作に依存しているということである。リファクタリングや2つのうちのひとつを置き換えるためには、両方を変更するという予期しない多くの作業が必要になる。依存性をなくす確実な方法は、一方のクラスのインターフェイスに依存性注入を使用することである。
 
-**Exception** Domain models such as defined in [Domain Driven Design](http://domaindrivendesign.org/) tend to occasionally involve bidirectional associations that model real-life associations. In those cases, I would make sure they are really necessary, but if they are, keep them in.
+**例外** [ドメイン駆動設計](http://domaindrivendesign.org/)で定義されたドメインモデルは実生活の関係性によって双方向の関係になることがある。このようなケースでは、本当に必要かどうかを確認して、それでも必要な場合はそれを維持する。
 
-###Classes should have state and behavior (AV1025) ![](images/1.png)
+###クラスは状態と振る舞いを持つべきである (AV1025) ![](images/1.png)
 
-In general, if you find a lot of data-only classes in your code base, you probably also have a few (static) classes with a lot of behavior (see AV1008). Use the principles of object-orientation explained in this section and move the logic as close to the data it applies to.
+コードベースにデータだけのクラスが大量にある場合、多くの振る舞いを持つ（静的な）クラス （AV1008を参照）.がいくつかあるのではないだろうか。このセクションで説明されているオブジェクト指向の原則を使って、それが適用されるデータの近くにロジックを移動する。
 
-**Exception** The only exception to this rule are classes that are used to transfer data over a communication channel, also called [Data Transfer Objects](http://martinfowler.com/eaaCatalog/dataTransferObject.html), or a class that wraps several parameters of a method.
+例外このルールの唯一の例外は、[データ転送オブジェクト（Data Transfer Objects）](http://martinfowler.com/eaaCatalog/dataTransferObject.html)と呼ばれる通信チャネルでデータを転送するために使用されるクラスか、メソッドのパラメータをラップするクラスだけである。
