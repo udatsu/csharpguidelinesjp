@@ -2,51 +2,52 @@
 NOTE: Requires Markdown Extra. See http://michelf.ca/projects/php-markdown/extra/
  --> 
 
-#Member Design Guidelines
+#メンバーのデザインガイドライン
 
-### Allow properties to be set in any order (AV1100) ![](images/1.png)
+### プロパティはあらゆる順番でセットできるようにする (AV1100) ![](images/1.png)
 
-Properties should be stateless with respect to other properties, i.e. there should not be a difference between first setting property DataSource and then DataMember or vice versa.
+プロパティは、他のプロパティに対してステートレスでなくてはならない。すなわち、DataSource プロパティの後でDataMemberをセットした場合とその逆で差があってはいけない。
 
-### Use a method instead of a property (AV1105) ![](images/3.png)
+### プロパティの代わりにメソッドを使用する (AV1105) ![](images/3.png)
 
-- If the work is more expensive than setting a field value. 
-- If it represents a conversion such as the `Object.ToString` method.
-- If it returns a different result each time it is called, even if the arguments didn't change. For example, the `NewGuid` method returns a different value each time it is called.
-- If the operation causes a side effect such as changing some internal state not directly related the property (which violates the [Command Query Separation](http://martinfowler.com/bliki/CommandQuerySeparation.html) principle). 
+- フィールドの値をセットするよりも負荷が大きいもの
+- Object.ToString メソッドのように変換を意味するもの
+- 引数が同じでも、呼び出されるたびに異なる結果を返す場合。例えば、NewGuidメソッドは、呼び出されるたびに違う値を返すもの
+- 直接関係ないプロパティの内部状態によって異なる([コマンドとクエリ分離](http://martinfowler.com/bliki/CommandQuerySeparation.html)に違反)など、操作の副作用が発生するもの
 
-**Exception** Populating an internal cache or implementing [lazy-loading](http://www.martinfowler.com/eaaCatalog/lazyLoad.html) is a good exception.
+**例外** 内部キャッシュへの投入や遅延読み込みはよい例である。
 
-### Don't use mutual exclusive properties (AV1110) ![](images/1.png)
+### 相互排他なプロパティを使用しない (AV1110) ![](images/1.png)
 
-Having properties that cannot be used at the same time typically signals a type that is representing two conflicting concepts. Even though those concepts may share some of the behavior and state, they obviously have different rules that do not cooperate.
+同時に使用できないプロパティを持つことは、通常ひとつの型に2つの相反するコンセプトを持つことを意味している。これらのコンセプトはいくつかの振る舞いや状態を共有しているにも関わらず、協力できない異なるルールを持っている。
 
-This violation is often seen in domain models and introduces all kinds of conditional logic related to those conflicting rules, causing a ripple effect that significantly worsens the maintenance burden.
+この違反はドメインモデルでよく見られ、これらの競合するルールに関連する条件付きロジックのすべての種類でメンテナンス負荷を大幅に悪化させる波及効果を引き起こす。
 
-### A method or property should do only one thing (AV1115) ![](images/1.png)
+### メソッドやプロパティはひとつのことだけをする (AV1115) ![](images/1.png)
 
-Similarly to rule AV1000, a method should have a single responsibility.
+ルールAV1000と同様、メソッドは単一の責任だけを持つべきである。
 
-### Don't expose stateful objects through static members (AV1125) ![](images/2.png)
+### ステートフルなオブジェクトを静的メンバーとして公開してはいけない (AV1125) ![](images/2.png)
 
-A stateful object is an object that contains many properties and lots of behavior behind that. If you expose such an object through a static property or method of some other object, it will be very difficult to refactor or unit test a class that relies on such a stateful object. In general, introducing a construction like that is a great example of violating many of the guidelines of this chapter.
+ステートフルなオブジェクトとは、多くのプロパティとその背後にある多くの振る舞いが含まれているオブジェクトである。オブジェクトを静的プロパティや静的メソッドを通じて、他のオブジェクトに公開した場合、リファクタリングやユニットテストが難しく、ステートフルオブジェクトに依存したクラスになってしまう。そのような作りになっている場合、一般的にこの章にある多くのガイドラインに違反したよい例である。
 
-A classic example of this is the `HttpContext.Current` property, part of ASP.NET. Many see the `HttpContext` class as a source for a lot of ugly code. In fact, the testing guideline [Isolate the Ugly Stuff](http://msdn.microsoft.com/en-us/magazine/dd263069.aspx#id0070015) often refers to this class.
+ASP.NETの一部である`HttpContext.Current`プロパティはこの例のひとつである。ひどいコードとして`HttpContext`のソースコードを参照して欲しい。事実、テストガイドライン[やっかいなものを切り離す](http://msdn.microsoft.com/en-us/magazine/dd263069.aspx#id0070015)では、このクラスをよく参照している。
 
-### Return an `IEnumerable<T>` or `ICollection<T>` instead of a concrete collection class (AV1130) ![](images/2.png)
+### コレクションクラスの代わりに`IEnumerable<T>`や`ICollection<T>`を返す (AV1130) ![](images/2.png)
 
-In general, you don't want callers to be able to change an internal collection, so don't return arrays, lists or other collection classes directly. Instead, return an `IEnumerable<T>`, or, if the caller must be able to determine the count, an `ICollection<T>`.
+一般的に呼び出し元で内部コレクションを変更できないようにしたいので、配列、リストなどのコレクションクラスを直接返してはいけない。代わりに`IEnumerable<T>`や、呼び出し元でカウントが必要なら`ICollection<T>`を返す。
 
-**Note** If you're using .NET 4.5, you can also use `IReadOnlyCollection<T>`, `IReadOnlyList<T>` or `IReadOnlyDictionary<TKey, TValue>`.
+**Note** .NET 4.5を使っているのであれば、 `IReadOnlyCollection<T>`、`IReadOnlyList<T>`、`IReadOnlyDictionary<TKey, TValue>`も使用することができる。
 
-### Properties, methods and arguments representing strings or collections should never be `null` (AV1135) ![](images/1.png)
+### 文字列やコレクションのプロパティ、メソッド、引数は`null`であってはならない (AV1135) ![](images/1.png)
 
-Returning `null` can be unexpected by the caller. Always return an empty collection or an empty string instead of a `null` reference. This also prevents cluttering your code base with additional checks for `null`, or even worse, `string.IsNotNullOrEmpty()`.
 
-### Define parameters as specific as possible (AV1137) ![](images/2.png)
+nullを返すことは呼び出し元が予期できない。`null`ではなく、空のコレクションや空文字列を返すようにする。これはまた、`null`チェックを追加するかさらに悪い`string.IsNotNullOrEmpty()`であなたのコードベースが乱雑になることを防止する。
 
-If your member needs a specific piece of data, define parameters as specific as that and don't take a container object instead. For instance, consider a method that needs a connection string that is exposed through some central `IConfiguration` interface. Rather than taking a dependency on the entire configuration, just define a parameter for the connection string. This not only prevents unnecessary coupling, it also improved maintainability in the long run.
+### できるだけ具体的なパラメータを定義する (AV1137) ![](images/2.png)
 
-### Consider using domain-specific value types rather than primitives (AV1140) ![](images/3.png)
+メンバーが特定のデータを必要とする場合、コンテナオブジェクトを受け取るのではなく、明示的なパラメータを定義する。例えば、`IConfiguration` （構成）インターフェイスで公開されている接続文字列が必要なメソッドがあった場合、構成全体への依存性を持つのではなく、単に接続文字列をパラメータとして定義する。これは必要のない結合を防ぐだけでなく、長期的な保守性を向上させる。
 
-Instead of using strings, integers and decimals for representing domain specific types such as an ISBN number, an email address or amount of money, consider created dedicated value objects that wrap both the data and the validation rules that apply to it. By doing this, you prevent ending up having multiple implementations of the same business rules, which both improves maintainability and prevents bugs.
+### プリミティブよりもドメイン固有の値型を検討する (AV1140) ![](images/3.png)
+
+string, int, decimalなどを使うのではなく、ISBN番号、Eメールアドレスや金額などドメイン固有の型など、データとそれに適用されるバリデーションルールの両方をラップした専用の値オブジェクトの作成を検討する。これを行うことにより、同じビジネスルールが複数存在することがなくなり、保守性とバグの防止の両方が改善される。
