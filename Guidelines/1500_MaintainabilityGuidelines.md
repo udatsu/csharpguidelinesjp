@@ -2,36 +2,44 @@
 NOTE: Requires Markdown Extra. See http://michelf.ca/projects/php-markdown/extra/
  --> 
 
-#Maintainability Guidelines
+#保守性ガイドライン
 
-### Methods should not exceed 7 statements (AV1500) ![](images/1.png)
-A method that requires more than 7 statements is simply doing too much or has too many responsibilities. It also requires the human mind to analyze the exact statements to understand what the code is doing. Break it down in multiple small and focused methods with self-explaining names, but make sure the high-level algorithm is still clear.
+### メソッドは7ステートメントを超えるべきではない (AV1500) ![](images/1.png)
 
-### Make all members private and types internal by default (AV1501) ![](images/1.png)
-To make a more conscious decision on which members to make available to other classes first restrict the scope as much as possible. Then carefully decide what to expose as a public member or type.
+7個より多いステートメントを持つメソッドは、多くのことをし過ぎているか、多くの責任を持ちすぎている。これはまた、コードが何をしているかを理解するために人が正確にステートメントを分析する必要があります。内容を説明した名前を持つ、複数の小さく、フォーカスされたメソッドに分割して、それでも高いレベルでアルゴリズムがまだ明確であることを確認する。
 
-### Avoid conditions with double negatives (AV1502) ![](images/2.png)
-Although a property like `customer.HasNoOrders` make sense, avoid using it in a negative condition like this:
+### デフォルトでは、すべてのメンバーを`private`に、型を`internal`にする (AV1501) ![](images/1.png)
+
+どのメンバーをほかのクラスに提供するかをより意識的に決定するために、最初はスコープを可能な限り狭める。その後慎重になにをpublicメンバーや型として公開するかを決める。
+
+### 二重否定の条件を避ける (AV1502) ![](images/2.png)
+
+`customer.HasNoOrders`のようなプロパティは間違っていないが、以下のように否定条件で使用するのは避ける :
 
 	bool hasOrders = !customer.HasNoOrders;
 
-Double negatives are more difficult to grasp than simple expressions, and people tend to read over the double negative easily.
+二重否定は単純な表現よりも理解が難しく、人々は二重否定を簡単に読むことができない。
 
-### Name assemblies after their contained namespace (AV1505) ![](images/3.png)
-All DLLs should be named according to the pattern *Company*.*Component*.dll where *Company* refers to your company's name and *Component* contains one or more dot-separated clauses. For example `AvivaSolutions.Web.Controls.dll`.
+### アセンブリ名にはそれに含まれる名前空間を使用する (AV1505) ![](images/3.png)
 
-As an example, consider a group of classes organized under the namespace AvivaSolutions.Web.Binding exposed by a certain assembly. According to this guideline, that assembly should be called AvivaSolutions.Web.Binding.dll. 
+すべてのDLLは*Company*.*Component*.dll のパターンで、*Company*は、企業名で、*Component*はひとつ以上のドットで区切られた節を含んでいる名前を使用するべきである。例えば、
+`AvivaSolutions.Web.Controls.dll`
 
-**Exception** If you decide to combine classes from multiple unrelated namespaces into one assembly, consider post fixing the assembly with Core, but do not use that suffix in the namespaces. For instance, AvivaSolutions.Consulting.Core.dll.
+例として、アセンブリで公開しているAvivaSolutions.Web.Binding名前空間の下のグループを検討してみよう。ガイドラインによるとアセンブリは次のように呼ばれるべきである。
+`AvivaSolutions.Web.Binding.dll`
 
-### Name a source file to the type it contains (AV1506) ![](images/3.png)
-Use Pascal casing for naming the file and don't use underscores.
+**例外** 無関係な複数の名前空間からクラスを集めてひとつのアセンブリに結合する場合、アセンブリの最後にCoreをつけることを検討する。ただし、名前空間にはつけない。例えば、
+AvivaSolutions.Consulting.Core.dll.
 
-### Limit the contents of a source code file to one type (AV1507) ![](images/3.png)
-**Exception** Nested types should, for obvious reasons, be part of the same file.
+### ソースファイル名にはそれに含まれる型を使用する (AV1506) ![](images/3.png)
+ファイルの名前にはPascal Caseを使用して、アンダースコアを使用しない。
 
-### Name a source file to the logical function of the partial type (AV1508) ![](images/3.png)
-When using partial types and allocating a part per file, name each file after the logical part that part plays. For example:
+### ソースコードファイルに含めるのはひとつの型に制限する (AV1507) ![](images/3.png)
+**例外** ネストされた型は明らかに同じファイルの一部である必要がある。
+
+### ソースファイル名には、partialタイプの論理機能をつける (AV1508) ![](images/3.png)
+
+Partialタイプを使用して、ファイルごとに一部を割り当てている場合、それぞれのファイル名は論理パートの後にパートが果たしていることをつける。例えば、
 
 	// In MyClass.cs
 	public partial class MyClass
@@ -41,78 +49,82 @@ When using partial types and allocating a part per file, name each file after th
 	public partial class MyClass
 	{...}
 
-### Use using statements instead of fully qualified type names (AV1510) ![](images/3.png)
-Limit usage of fully qualified type names to prevent name clashing. For example, don't do this
+### 完全な型名の代わりにusing ディレクティブを使用する (AV1510) ![](images/3.png)
 
-	var list = new System.Collections.Generic.List();
+名前の衝突を防ぐために完全な名前を制限する。例えば、以下のように使用しない。
 
-Instead, do this
+	var list = new System.Collections.Generic.List<string>();
+
+代わりに以下のようにする。
 
 	using System.Collections.Generic;
-	
-	var list = new List();
 
-If you do need to prevent name clashing, use a `using` directive to assign an alias:
+	var list = new List<string>();
+
+名前の衝突を防ぐ必要がある場合、usingディレクティブを使って別名を割り当てる:
 
 	using Label = System.Web.UI.WebControls.Label;
 
-### Don't use "magic" numbers (AV1515) ![](images/1.png)
-Don't use literal values, either numeric or strings, in your code other than to define symbolic constants. For example:
+### “マジック” ナンバーを使ってはいけない (AV1515) ![](images/1.png)
 
-	public class Whatever  
+記号定数以外に数値、文字列のどちらにもリテラル値を使用してはいけない。例えば:
+
+	public class Whatever
 	{
 		public static readonly Color PapayaWhip = new Color(0xFFEFD5);
-		public const int MaxNumberOfWheels = 18;  
+		public const int MaxNumberOfWheels = 18;
 	}
 
-Strings intended for logging or tracing are exempt from this rule. Literals are allowed when their meaning is clear from the context, and not subject to future changes, For example:
+ログやトレースのための文字列はこのルールから除外する。文脈から意味が明確な場合と将来変更される可能性がない場合にはリテラルを許可する。例えば:
 
-	mean = (a + b) / 2;// okay  
-	WaitMilliseconds(waitTimeInSeconds \* 1000);// clear enough
+	mean = (a + b) / 2;     						// OK
+	WaitMilliseconds(waitTimeInSeconds * 1000); 			// 十分明確である
 
-If the value of one constant depends on the value of another, do attempt to make this explicit in the code.
+ある定数が他に依存している場合は、コード内で明示するようにする。
 
-	public class SomeSpecialContainer  
-	{  
-		public const int MaxItems = 32;  
-		public const int HighWaterMark = 3 \* MaxItems / 4;// at 75%  
+	public class SomeSpecialContainer
+	{
+	 	public const int MaxItems = 32;
+	 	public const int HighWaterMark = 3 * MaxItems / 4; 	// at 75%
 	}
 
-**Note** An enumeration can often be used for certain types of symbolic constants.
+**Note** 記号定数を明らかにするために列挙型を使用することができる
 
-### Only use var when the type is very obvious (AV1520) ![](images/1.png)
-Only use var as the result of a LINQ query, or if the type is very obvious from the same statement and using it would improve readability. So don't
+### 型が確実に明確なときにだけvarを使用する (AV1520) ![](images/1.png)
 
-	var i = 3;									// what type? int? uint? float?
-	var myfoo = MyFactoryMethod.Create("arg");	// Not obvious what base-class or			
-												// interface to expect. Also difficult
-												// to refactor if you can't search for
-												// the class
+LINQクエリの結果やステートメントからの型が確実に明確なときには、`var`を使うことによって可読性が向上する。そのため、以下のようには使用しない。
 
-Instead, use `var` like this.
+	var i = 3;		// 型はなに？ int? uint? float?
+	var myfoo = MyFactoryMethod.Create("arg");	// なにを期待しているのかが明確じゃない。 
+												// ベースクラス? インターフェイス?
+												// また、クラスを探すことができないと
+												// リファクタリングが難しくなる
+
+`var`は、以下のように使用する。
 
 	var q = from order in orders where order.Items > 10 and order.TotalValue > 1000;
-	var repository = new RepositoryFactory.Get();	
-	var list = new ReadOnlyCollection();
+	var repository = new RepositoryFactory.Get<IOrderRepository>();
+	var list = new ReadOnlyCollection<string>();
 
-In all of three above examples it is clear what type to expect. For a more detailed rationale about the advantages and disadvantages of using var, read Eric Lippert's [Uses and misuses of implicit typing](http://blogs.msdn.com/b/ericlippert/archive/2011/04/20/uses-and-misuses-of-implicit-typing.aspx).
+上記3つの例では、期待している型が明確である。より詳細な `var`によるメリット・デメリットは、Eric Lippert氏の[型推論を使うかどうか](http://blogs.msdn.com/b/ericlippert/archive/2011/04/20/uses-and-misuses-of-implicit-typing.aspx)を参照して欲しい。
 
-### Declare and initialize variables as late as possible (AV1521) ![](images/2.png)
-Avoid the C and Visual Basic styles where all variables have to be defined at the beginning of a block, but rather define and initialize each variable at the point where it is needed.
+### 変数の宣言と初期化は可能な限り遅らせる (AV1521) ![](images/2.png)
 
-### AV1522    Assign each variable in a separate statement
-Don't use confusing constructs like the one below.
+CとVisual Basicのようにすべての変数をブロックの最初に宣言するスタイルは避け、各変数が必要になった時点で定義して初期化する。
+
+### 各変数は分離して割り当てる (AV1522)
+以下のように紛らわしい構築をしてはならない。
 
 	var result = someField = GetSomeMethod();
 
-### Favor Object and Collection Initializers over separate statements (AV1523) ![](images/?.png)
-Instead of
+### ステートメントをわけるよりもオブジェクトやコレクションの初期化子を使用する (AV1523) ![](images/?.png)
+以下のようにする代わりに
 
 	var startInfo = new ProcessStartInfo("myapp.exe");	
 	startInfo.StandardOutput = Console.Output;
 	startInfo.UseShellExecute = true;
 
-Use [Object Initializers](http://msdn.microsoft.com/en-us/library/bb384062.aspx)
+[オブジェクト初期化子](http://msdn.microsoft.com/ja-jp/library/bb384062.aspx)を使用する。
 
 	var startInfo = new ProcessStartInfo("myapp.exe")  
 	{
@@ -120,45 +132,48 @@ Use [Object Initializers](http://msdn.microsoft.com/en-us/library/bb384062.aspx)
 		UseShellExecute = true  
 	};
 
-Similarly, instead of
+同様に、以下の代わりに
 
 	var countries = new List();
 	countries.Add("Netherlands");
 	countries.Add("United States");
 
-Use collection or [dictionary initializers](http://msdn.microsoft.com/en-us/library/bb531208.aspx)
+コレクションや[ディクショナリ初期化子](http://msdn.microsoft.com/ja-jp/library/bb531208.aspx)を使用する。
 
 	var countries = new List { "Netherlands", "United States" };
 
-### Don't make explicit comparisons to `true` or `false` (AV1525) ![](images/1.png)
+### `true` や`false` を明示的に比較しない (AV1525) ![](images/1.png)
 
-It is usually bad style to compare a `bool`-type expression to `true` or `false`. For example:
+通常は`bool`型の式で`true`か`false`かを比較するためことはよくないスタイルである。例えば:
 
-	while (condition == false)// wrong; bad style  
-	while (condition != true)// also wrong  
-	while (((condition == true) == true) == true)// where do you stop?  
+	while (condition == false)// 間違えた、よくないスタイル 
+	while (condition != true)// これも誤り  
+	while (((condition == true) == true) == true)// どこまでいくの？
 	while (condition)// OK
 
-### Don't change a loop variable inside a for or foreach loop (AV1530) ![](images/2.png)
-Updating the loop variable within the loop body is generally considered confusing, even more so if the loop variable is modified in more than one place. Although this rule also applies to `foreach` loops, an enumerator will typically detect changes to the collection the `foreach` loop is iteration over.
+### ループ変数を`for`や`foreach`ループの中で変更しない (AV1530) ![](images/2.png)
+
+ループ変数を一か所だけでなく、ループ処理の中で変更すると通常は混乱をきたすことになる。このルールは`foreach`ループにも適用されるが、通常は列挙子がコレクションの変更を検出する。
 
 	for (int index = 0; index < 10; ++index)  
 	{  
 		if (_some condition_)
 		{
-			index = 11; // Wrong! Use 'break' or 'continue' instead.  
+			index = 11; //誤り! 代わりに‘break’ か‘continue’を使用する  
 		}
 	}
 
-### Avoid nested loops (AV1532) ![](images/2.png)
-A method that nests loops is more difficult to understand than one with only a single loop. In fact, in most cases having nested loops can be replaced with a much simpler LINQ query that uses the `from` keyword twice or more to _join_ the data.
+### ループのネストを避ける (AV1532) ![](images/2.png)
 
-### Always add a block after keywords such if, else, while, for, foreach and case (AV1535) ![](images/2.png)
-Please note that this also avoids possible confusion in statements of the form:
+ネストされたループを持つメソッドは単一のループのものより理解しづらい。実際のところ、ネストされたループを持つほとんどのケースは、データを結合するために`from`キーワードを2回以上使用してLINQクエリに置き換えることで大幅にシンプルにできる。
 
-	if (b1) if (b2) Foo(); else Bar(); // which 'if' goes with the 'else'?
+### `if`、`else`、`while`、`for`、`foreach`、`case`などのキーワードの後に常にブロックを追加する (AV1535) ![](images/2.png)
+
+これはフォーム内のステートメントの混乱も防ぐこともできる:
+
+	if (b1) if (b2) Foo(); else Bar(); // どちらの ‘if’ が ‘else’に進むのか?
 	
-	// The right way:  
+	// 正しくは:
 	if (b1)  
 	{  
 		if (b2)  
@@ -171,8 +186,8 @@ Please note that this also avoids possible confusion in statements of the form:
 		}  
 	}
 
-### Always add a `default` block after the last `case` in a `switch` statement (AV1536) ![](images/1.png)
-Add a descriptive comment if the `default` block is supposed to be empty. Moreover, if that block is not supposed to be reached throw an `InvalidOperationException` to detect future changes that may fall through the existing cases. This ensures better code, because all paths the code can travel has been thought about.
+### 常に`switch`ステートメントの最後の`case`の後に`default`ブロックを追加する (AV1536) ![](images/1.png)
+`default`ブロックが空の場合は、説明するコメントを追加する。また、そのブロックに到達することがない場合は、将来の変更で既存の`case`を通り抜けてしまったことを検出するために`InvalidOperationException`をスローする。これはすべてのパスを通るように考えられたいいコードと言える。
 
 	void Foo(string answer)  
 	{  
@@ -187,14 +202,15 @@ Add a descriptive comment if the `default` block is supposed to be empty. Moreov
 			  break;
 			
 			default:  
-			  // Not supposed to end up here.  
+			  // ここで終わることはない。  
 			  throw new InvalidOperationException("Unexpected answer " + answer);  
 		}  
 	}
 
-### Finish every if-else-if statement with an else-part (AV1537) ![](images/2.png)
-For example.
+### すべてのif-else-ifステートメントはelseで終わる (AV1537) ![](images/2.png)
 
+例えば、
+   
 	void Foo(string answer)  
 	{  
 		if (answer == "no")  
@@ -207,16 +223,17 @@ For example.
 		}  
 		else  
 		{  
-			// What should happen when this point is reached? Ignored? If not,   
+			// ここに到達したときになにが起こるのか？無視？そうじゃない場合は、   
 			// throw an InvalidOperationException.  
 		}  
 	}
 
-### Be reluctant with multiple return statements (AV1540) ![](images/2.png)
-One entry, one exit is a sound principle and keeps control flow readable. However, if the method is very small and complies with guideline AV1500 then multiple return statements may actually improve readability over some central boolean flag that is updated at various points.
+### 複数の`return` ステートメントを控える (AV1540) ![](images/2.png)
 
-### Don't use if-else statements instead of a simple (conditional) assignment (AV1545) ![](images/2.png)
-Express your intentions directly. For example, rather than
+ひとつの入り口、ひとつの出口は可読性の高いフロー制御を維持する原則である。ただし、メソッドが非常に小さく、ガイドラインAV1500に準拠している場合、複数のreturnステートメントは、何カ所かで更新されるbooleanフラグを管理するよりも可読性を向上させる。
+
+### 単純な(条件付きの)割り当ての代わりにif-else ステートメントを使用しない (AV1545) ![](images/2.png)
+直接の意図を表現する。例えば、以下よりも
 
 	bool pos;
 	
@@ -229,11 +246,11 @@ Express your intentions directly. For example, rather than
 		pos = false;  
 	}
 
-write
+以下のように書く。
 
-	bool pos = (val > 0);// initialization
+	bool pos = (val > 0);// 初期化
 
-Or instead of
+または、以下の代わりに
 
 	string result;
 	
@@ -248,37 +265,36 @@ Or instead of
 
 	return result;
 
-write
+以下のように書く
 
 	return someString ?? "Unavailable";
 
-### Encapsulate complex expressions in a method or property (AV1547) ![](images/1.png)
-Consider the following example:
+### メソッドやプロパティの複雑な表現をカプセル化する (AV1547) ![](images/1.png)
+
+以下の例について考えてみよう
 
 	if (member.HidesBaseClassMember && (member.NodeType != NodeType.InstanceInitializer))
 	{
-		// do something
+		// なにかをする
 	}
 
-In order to understand what this expression is about, you need to analyze its exact details and all the possible outcomes. Obviously, you could add an explanatory comment on top of it, but it is much better to replace this complex expression with a clearly named method:
+この表現を理解するためには、詳細とすべての結果で、なにをしているのかを分析する必要がある。明らかに、上にコメントを追加することができるが、それよりも明確な名前のメソッド名でこの複雑な表現を起きえる方がよいだろう:
 
-	if (NonConstructorMemberUsesNewKeyword(member))  
-	{  
-		// do something
-	}  
-  
-  
-	private bool NonConstructorMemberUsesNewKeyword(Member member)  
-	{  
-		return
-			(member.HidesBaseClassMember &&
-			(member.NodeType != NodeType.InstanceInitializer)  
+	if (NonConstructorMemberUsesNewKeyword(member))
+	{
+		// なにかをする
 	}
 
-You still need to understand the expression if you are modifying it, but the calling code is now much easier to grasp.
+	private bool NonConstructorMemberUsesNewKeyword(Member member)
+	{
+		return 
+			(member.HidesBaseClassMember && 
+			(member.NodeType != NodeType.InstanceInitializer)
+	}
+これでも、これを編集する時には理解する必要があるが、こちらの方が理解するのが簡単である。
 
-### Call the most overloaded method from other overloads (AV1551) ![](images/2.png)
-This guideline only applies to overloads that are intended for providing optional arguments. Consider for example the following code snippet:
+### 他のオーバーロードからもっともパラメータの多いメソッドを呼び出す (AV1551) ![](images/2.png)
+このガイドラインは、オプショナル引数を持つオーバーロードにのみ適用される。例えば以下のコードを見てみよう:
 
 	public class MyString  
 	{
@@ -305,54 +321,54 @@ This guideline only applies to overloads that are intended for providing optiona
 		}  
 	}
 
-The class `MyString` provides three overloads for the `IndexOf` method, but two of them simply call the one with the most parameters. Notice that the same rule applies to class constructors; implement the most complete overload and call that one from the other overloads using the `this()` operator. Also notice that the parameters with the same name should appear in the same position in all overloads.
+`MyString`クラスは`IndexOf`の3つのオーバーロードを提供するが、そのうち2つはもっともパラメータの多いものを呼び出す。同じルールがクラスのコンストラクターに適用される; もっとも完全なオーバーロードを実装して、他のオーバーロードから`this()`初期化子を使って呼び出す。また、同じ名前のパラメータは同じすべてのオーバーロードで同じ位置に現れるようにするべきである。
 
-**Important** If you also want to allow derived classes to override these methods, define the most complete overload as a `protected virtual` method that is called by all overloads.
+**重要** 派生クラスでこれらのメソッドのオーバーロードを可能にしたい場合、もっとも完全なオーバーロードを`protected virtual`にして、すべてのオーバーロードから呼ばれるようにする。
 
-### Only use optional arguments to replace overloads (AV1553) ![](images/1.png)
-The only valid reason for using C# 4.0's optional arguments is to replace the example from rule AV1551 with a single method like:
+### オプショナル引数は、オーバーロードを置き換えるためにだけ使用する (AV1553) ![](images/1.png)
+C# 4.0でオプショナル引数を使用する唯一の妥当な理由は、ひとつのメソッドで以下のようにルールAV1551 の例を置き換えることである:
 
 	public virtual int IndexOf(string phrase, int startIndex = 0, int count = 0)
 	{
 		return someText.IndexOf(phrase, startIndex, count);
 	}
 
-If the optional parameter is a reference type then it can only have a default value of `null`. But since strings, lists and collections should never be `null` according to rule AV1235, you must use overloaded methods instead.
+オプショナルパラメータが参照型の場合、デフォルト値は`null`しか与えられない。しかしここで、string、リスト、コレクションの場合は、ルールAV1235により`null`であってはならないため、代わりにオーバーロードされたメソッドを使用する必要がある。
 
-**Note** The default values of the optional parameters are stored at the caller side. As such, changing the default value without recompiling the calling code will not apply the new default value properly.
+**Note** オプショナルパラメータのデフォルト値は、呼び出し側に保存されている。呼び出し側のコードを再コンパイルしないでデフォルト値を変更すると、新しいデフォルト値プロパティは適用されない。
 
-**Note** When an interface method defines an optional parameter, its default value is not considered during overload resolution unless you call the concrete class through the interface reference. See [this](http://blogs.msdn.com/b/ericlippert/archive/2011/05/09/optional-argument-corner-cases-part-one.aspx) post by Eric Lippert for more details.
+**Note** インターフェイスメソッドがオプショナルパラメータを定義している場合、インターフェイスの参照を通じてクラスの実態を呼び出さない限り、デフォルト値はオーバーロードの解決時に考慮されない。詳細は、Eric Lippert氏の[この投稿](http://blogs.msdn.com/b/ericlippert/archive/2011/05/09/optional-argument-corner-cases-part-one.aspx)を参照。
 
-### Avoid using named arguments (AV1555) ![](images/1.png)
-C# 4.0's named arguments have been introduced to make it easier to call COM components that are known for offering tons of optional parameters. If you need named arguments to improve the readability of the call to a method, that method is probably doing too much and should be refactored.
+### 名前付き引数の使用を避ける (AV1555) ![](images/1.png)
+C# 4.0の名前付き引数は、大量のオプショナルパラメータを提供するCOMコンポーネントの呼び出しを簡単にするために導入された。もしメソッド呼び出しの可読性を改善するために名前付き引数が必要なら、そのメソッドはおそらく多くのことをやり過ぎているか、リファクタリングすべきである。
 
-**Exception**  
-The only exception where named arguments improve readability is when calling a method of some code base you don't control that has a `bool` parameter like this:  
+**例外**
+名前付き引数で可読性が改善する唯一の例外は、`bool`パラメータを持つコントロールしないいくつかのコード ベース メソッドを呼び出す以下のような時である:
 
 	object[] myAttributes = type.GetCustomAttributes(typeof(MyAttribute), inherit: false);
 
-### Don't allow methods and constructors with more than three parameters (AV1561) ![](images/1.png)
-If you end up with a method with more than three parameters, use a structure or class for passing multiple arguments such as explained in the [Specification](http://en.wikipedia.org/wiki/Specification_pattern)design pattern. In general, the fewer the number of parameters, the easier it is to understand the method. Additionally, unit testing a method with many parameters requires many scenarios to test.
+### 3つより多いパラメータを受け取るメソッドやコンストラクターを許可しない (AV1561) ![](images/1.png)
+メソッドが3つより多いパラメータを必要とする場合、[Specification](http://en.wikipedia.org/wiki/Specification_pattern)デザインパターンで説明されているように、複数の引数を渡すための構造体かクラスを使用する。一般的にパラメータ数が少ないほうがメソッドを理解しやすい。さらに、多くのパラメータが必要なメソッドのユニットテストには多くのシナリオが必要になる。
 
-### Don't use `ref` or `out` parameters (AV1562) ![](images/1.png)
-They make code less understandable and might cause people to introduce bugs. Prefer returning compound objects instead.
+### `ref`や`out`パラメータを使用しない (AV1562) ![](images/1.png)
+これらはコードを理解しづらくして、バグを引き起こすことがある。代わりに複合オブジェクトを返すようにする。
 
-### Avoid methods that take a bool flag (AV1564) ![](images/2.png)
-Consider the following method signature:
+### bool フラグを受け取るメソッドを避ける (AV1564) ![](images/2.png)
+以下のようなシグニチャのメソッドについて考えてみよう:
 
 	public Customer CreateCustomer(bool platinumLevel) {}
 
-On first sight this signature seems perfectly fine, but when calling this method you will lose this purpose completely:
+一見するとこのシグニチャは問題ないように見えるが、このメソッドを呼び出すと、完全に目的を見失うことになる:
 
 	Customer customer = CreateCustomer(true);
 
-Often, a method taking such a flag is doing more than one thing and needs to be refactored into two or more methods. An alternative solution is to replace the flag with an enumeration.
+フラグを受け取るメソッドは2つ以上のことをやっていることが多く、2つ以上のメソッドにリファクタリングする必要がある。代替のソリューションとしてはフラグを列挙に置き換えることである。
 
-### Don't use parameters as temporary variables (AV1568) ![](images/3.png)
-Never use a parameter as a convenient variable for storing temporary state. Even though the type of your temporary variable may be the same, the name usually does not reflect the purpose of the temporary variable.
+### パラメータを一時変数として使用しない (AV1568) ![](images/3.png)
+一時的な状態を保持する便利な変数としてパラメータを使用してはならない。一時的な変数と型が同じであったとしても、一時変数としての目的を反映していない。
 
-### Always check the result of an `as` operation (AV1570) ![](images/1.png)
-If you use `as` to obtain a certain interface reference from an object, always ensure that this operation does not return `null`. Failure to do so may cause a `NullReferenceException` at a much later stage if the object did not implement that interface.
+### 常に`as`操作の結果をチェックする (AV1570) ![](images/1.png)
+オブジェクトからインターフェイスの参照を取得するために`as`を使っている場合、その操作が`null`を返さないかを常に確認する。オブジェクトがインターフェイスを実装していないときにこれを怠ると、ずっと後の段階で`NullReferenceException`が発生することがある。
 
-### Don't comment out code (AV1575) ![](images/1.png)
-Never check-in code that is commented-out, but instead use a work item tracking system to keep track of some work to be done. Nobody knows what to do when they encounter a block of commented-out code. Was it temporarily disabled for testing purposes? Was it copied as an example? Should I delete it?
+### コードをコメントアウトしない (AV1575) ![](images/1.png)
+コメントアウトされたコードをチェックインするのではなく、やるべき作業を管理できる作業アイテムをトラックできるシステムを使用する。コメントアウトされたコードをみつけたときになにをするべきかを誰もわからない。テストのために一時的に無効化している？サンプルをコピーした？そんなものは削除するべきだ。
