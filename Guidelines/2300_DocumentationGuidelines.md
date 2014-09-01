@@ -2,26 +2,27 @@
 NOTE: Requires Markdown Extra. See http://michelf.ca/projects/php-markdown/extra/
  --> 
 
-#Documentation Guidelines
+#ドキュメントガイドライン
 
-### Write comments and documentation in US English  (AV2301) ![](images/1.png)
+### コメントとドキュメントをアメリカ英語で記述する (AV2301) ![](images/1.png)
 
-### Document all public, protected and internal types and members  (AV2305) ![](images/2.png)
-Documenting your code allows Visual Studio to pop-up the documentation when your class is used somewhere else. Furthermore, by properly documenting your classes, tools can generate professionally looking class documentation.
+### すべてのpublic、`protected`、`internal`タイプとメンバーにドキュメントを記述する (AV2305) ![](images/2.png)
+どこかであなたのクラスが使われたときにVisual Studioでドキュメントがポップアップされるようにドキュメントを記述する。あなたのクラスを正しくドキュメント化することによって、ツールはクラスのドキュメントを生成することができる。
 
-### Write XML documentation with another developer in mind  (AV2306) ![](images/2.png)
-Write the documentation of your type with another developer in mind. Assume he or she will not have access to the source code and try to explain how to get the most out of the functionality of your type.
+### 他の開発者を念頭に置いてXMLドキュメントを記述する (AV2306) ![](images/2.png)
+他の開発者を念頭に置いて、型のドキュメントを記述する。彼または彼女がソースコードにアクセスできないことを想定して、その型の機能を最大限に活用できる方法を説明するようにする。
 
-### Write MSDN-style documentation  (AV2307) ![](images/3.png)
-Following the MSDN on-line help style and word choice helps the developer to find its way through your documentation more easily.
+### MSDNスタイルのドキュメントを記述する (AV2307) ![](images/3.png)
 
-**Tip** The tool [GhostDoc](http://submain.com/products/ghostdoc.aspx)can generate a starting point for documenting code with a shortcut key.
+開発者がドキュメントをより簡単に見つけられるように以下のMSDNオンラインヘルプのスタイルと単語を選択する。
 
-### Avoid inline comments  (AV2310) ![](images/2.png)
-If you feel the need to explain a block of code using a comment, consider replacing that block with a method having a clear name.
+**Tip** [GhostDoc](http://submain.com/products/ghostdoc.aspx)は、ショートカットキーを使用してコードをドキュメント化する起点を生成することができる。
 
-### Only write comments to explain complex algorithms or decisions  (AV2316) ![](images/1.png)
-Try to focus comments on the _why_ and _what_ of a code block and not the _how_. Avoid explaining the statements in words, but instead help the reader understand why you chose a certain solution or algorithm and what you are trying to achieve. If applicable, also mention that you chose an alternative solution because you ran into a problem with the obvious solution.
+### インラインコメントを避ける (AV2310) ![](images/2.png)
+コメントを使ってコードのブロックを説明する必要性を感じた場合、明確な名前を持つブロックに置き換えることを検討する。
 
-### Don't use comments for tracking work to be done later  (AV2318) ![](images/3.png)
-Annotating a block of code or some work to be done using a TODO or similar comment may seem a reasonable way of tracking work-to-be-done. But in reality, nobody really searches for comments like that. Use a work item tracking system such as Team Foundation Server to keep track of left overs.
+### 複雑なアルゴリズムや決定を説明するコメントのみを記述する (AV2316) ![](images/1.png)
+コメントには「どのように(how)」ではなく、コードブロックの「なぜ(_Why_)」と「なに(_What_)」にフォーカスする。ステートメントを言葉で説明するのを避け、なぜ(Why)そのソリューションやアルゴリズムを選択して、なに(_What_)を達成しようとしたのかを読み手が理解することを助けよ。明確なソリューションで問題が発生したなどの理由で代替手段を選んだのであれば、そのことについて触れること。
+
+### 後で作業を追跡できるようにするためにコメントを使用しない (AV2318) ![](images/3.png)
+TODOなどのコメントを使って、コードのブロックややるべき作業を記述することは、やるべき作業を追跡する合理的な方法に見えるかもしれない。しかし実際には、誰もそのようなコメントを探すことはない。残作業を追跡するためにTeam Foundation Serverなどの作業アイテムトラッキングシステムを使用する。
