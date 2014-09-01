@@ -2,24 +2,29 @@
 NOTE: Requires Markdown Extra. See http://michelf.ca/projects/php-markdown/extra/
  --> 
 
-#Performance Guidelines
+#パフォーマンス ガイドライン
+	
+### `IEnumerable<T>`が空かどうかを確認するために`Any()`の使用を検討する (AV1800) ![](images/3.png)
 
-### Consider using `Any()` to determine whether an `IEnumerable<T>` is empty (AV1800) ![](images/3.png)
-When a method or other member returns an `IEnumerable<T>` or other collection class that does not expose a `Count` property, use the `Any()` extension method rather than `Count()` to determine whether the collection contains items. If you do use `Count()`, you risk that iterating over the entire collection might have a significant impact (such as when it really is an `IQueryable<T>` to a persistent store).
+メソッドや他のメンバーが`Count`プロパティを公開しない`IEnumerable<T>`や他のコレクションクラスを返す場合、コレクションにアイテムが含まれているかどうかを判定するために`Count()`ではなく`Any()`拡張メソッドを使用する。`Count()`を使用する場合、コレクション全体を反復する重大なインパクト（それが実際に永続ストアへの`IQueryable<T>`など）を与えるリスクがある。
 
-**Note** If you return an `IEnumerable<T>` to prevent editing from outside the owner as explained in AV1130 and you're developing in .NET 4.5 or higher, consider the new read-only classes.
+**Note** `IEnumerable<T>`を返す場合、AV1130 で説明されているようにオーナーが外部からの編集を防ぎ、.NET 4.5以上で開発している場合は、新しい読み取り専用クラスを検討する。
 
-### Only use `async` for low-intensive long-running activities (AV1820)
-The usage of `async` won't automagically run something on a worker thread like `Task.Run` does. It just adds the necessary logic to allow releasing the current thread and marshal the result back on that same thread if a long-running asynchronous operation has completed. In other words, use `async` only for I/O bound operations.
+### `async`は、低負荷で長期実行されるアクティビティにのみ使用する (AV1820)
 
-### Prefer `Task.Run` for CPU-intensive activities (AV1825)
-If you do need to execute a CPU bound operation, use `Task.Run` to offload the work to a thread from the Thread Pool. Just don't forget that you have to marshal the result back to your main thread manually.
+`async`の使用は、`Task.Run`のように自動的にワーカースレッドでなにかを実行するためではない。これは単に、現在のスレッドを解放して、長期実行されている非同期操作が完了したときに同じスレッドで結果をマーシャリングするのに必要なロジックを追加するだけである。言い換えれば、`async`は、I/Oに張り付く操作にのみ使用する。
 
-### Beware of mixing up `await`/`async` with `Task.Wait` (AV1830)
-`await` will not block the current thread but simply instruct to compiler to generate a state-machine. However, `Task.Wait` will block the thread and may even cause dead-locks (see AV1835).
+### CPUの負荷が高いアクティビティのために`Task.Run`を使用する (AV1825)
 
-### Beware of `async`/`await` deadlocks in single-threaded environments (AV1835)
-Consider the following asynchronous method:
+CPUに張り付く作業が必要な場合、スレッドプールからスレッドの作業負荷を軽減する`Task.Run`を使用する。メインスレッドに返された結果を手動でマーシャリングする必要があることを忘れてはいけない。
+
+### `await`/`async`と`Task.Wait`の混合に注意する (AV1830)
+
+`await`は現在のスレッドからブロックせず、単にコンパイラがステートマシンを生成するように指示するだけである。しかし`Task.Wait`は、スレッドをブロックしてデッドロックが発生する可能性がある（AV1835を参照）
+
+### シングルスレッド環境で`async`/`await`のデッドロックに注意する (AV1835)
+
+以下の非同期メソッドを見てみよう: 
 
 	private async Task GetDataAsync()
 	{
@@ -27,7 +32,7 @@ Consider the following asynchronous method:
 		return result.ToString();
 	}
 
-Now when an ASP.NET MVC controller action does this:
+ASP.NET MVCコントローラの操作は以下のようになっている:
 
 	public ActionResult ActionAsync()
 	{
@@ -36,4 +41,4 @@ Now when an ASP.NET MVC controller action does this:
 		return View(data);  
 	}
 
-You'll end up with a deadlock. Why? Because the `Result` property getter will block until the `async` operation has completed, but since an `async` method will automatically marshal the result back to the original thread and ASP.NET uses a single-threaded synchronization context, they'll be waiting on each other. A similar problem can also happen on WPF, Silverlight or a Windows Store C#/XAML app. Read more about this [here](http://blogs.msdn.com/b/pfxteam/archive/2011/01/13/10115163.aspx).
+これはデッドロックになってしまう。なぜか？なぜなら`Result`プロパティの取得は、`async`操作が終わるまでブロックされるが、`async`メソッドは元のスレッドに結果が返されると自動的にマーシャリングされるので、ASP.NETは、シングルスレッド同期コンテキストを使用してお互いを待ってしまう。同じような問題は、WPF、SilverlightやWindows Store C#/XAMLアプリでも発生する。これに関する詳細は[ここ](http://blogs.msdn.com/b/pfxteam/archive/2011/01/13/10115163.aspx)を読んで欲しい。
