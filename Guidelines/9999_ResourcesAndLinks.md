@@ -2,34 +2,35 @@
 NOTE: Requires Markdown Extra. See http://michelf.ca/projects/php-markdown/extra/
  --> 
 
-#Important Resources
-##The companion website
-This document is part of an effort to increase the consciousness with which C# developers do their daily job on a professional level. Therefor I've started a dedicated CodePlex site that can be easily found using the URL [www.csharpcodingguidelines.com](http://www.csharpcodingguidelines.com).
+#重要なリソース
+##手引きサイト
+このドキュメントは、C#開発者がプロフェッショナルレベルで日々の仕事を行うための意識を高める努力の一環である。そのために私は、URL [www.csharpcodingguidelines.com](http://www.csharpcodingguidelines.com)で簡単に見つけることができるようにして、専用のCodePlexサイトを始めた。
 
-In addition to the most up to date version of this document, you'll find:
+さらに、このドキュメントの最新バージョンの中に、これらを見つけることができる:
 
-- A companion quick-reference sheet
-- Visual Studio 2010/2012 Rule Sets for different types of systems.
-- [ReSharper](http://www.jetbrains.com/resharper/download/) layout configurations matching the rules in chapter 10.
-- A place to have discussions on C# coding quality.
+- 手引きサイトのクイックリファレンスシート
+- さまざまな種類のシステムのためのVisual Studio 2010/2012ルールセット
+- チャプター10のルールにマッチした[ReSharper](http://www.jetbrains.com/resharper/download/)レイアウト構成
+- C#コーディングの品質について議論を行う場所
 
-##Useful links
-In addition to the many links provided throughout this document, I'd like to recommend the following books, articles and sites for everyone interests in software quality,
+##便利なリンク
 
-[Code Complete: A Practical Handbook of Software Construction](http://www.amazon.com/Code-Complete-Practical-Handbook-Construction/dp/0735619670) (Steve McConnel)  
-One of the best books I've ever read. It deals with all aspects of software development, and even though the book was originally written in 2004, but you'll be surprised when you see how accurate it still is. I wrote a [review](http://www.dennisdoomen.net/2009/07/book-review-code-complete-2nd-edition.htmlhttp:/www.dennisdoomen.net/2009/07/book-review-code-complete-2nd-edition.html) in 2009 if you want to get a sense of its contents.
+このドキュメント全体を通じて提供される多くのリンクに加えて、以下の本、記事、サイトをソフトウェアの品質に興味をもつすべての人にお勧めする。
 
-[The Art of Agile Development](http://www.amazon.com/Art-Agile-Development-James-Shore/dp/0596527675) (James Shore)  
-Another great all-encompassing trip through the many practices preached by processes like Scrum and Extreme Programming. If you're looking for a quick introduction with a pragmatic touch, make sure you read James' book.
+[Code Complete: A Practical Handbook of Software Construction](http://www.amazon.com/Code-Complete-Practical-Handbook-Construction/dp/0735619670) (Steve McConnel)
+私が読んだ中で最高の一冊。これはソフトウェア開発のすべての面を扱っており、もともとは2004年に書かれた本だが、驚くべきことにいまでも的確に言い表している。その意味を知りたいのであれば、私が2009年に[レビュー](http://www.dennisdoomen.net/2009/07/book-review-code-complete-2nd-edition.htmlhttp:/www.dennisdoomen.net/2009/07/book-review-code-complete-2nd-edition.html)を書いている。
 
-[Applying Domain Driven-Design and Patterns: With Examples in C# and .NET](http://www.amazon.com/Applying-Domain-Driven-Design-Patterns-Examples/dp/0321268202) (Jimmy Nilsson)  
-The book that started my interest for both Domain Driven Design and Test Driven Development. It's one of those books that I wished I had read a few years earlier. It would have saved me from many mistakes..
+[The Art of Agile Development](http://www.amazon.com/Art-Agile-Development-James-Shore/dp/0596527675) (James Shore)
+ScrumやExtream Programmingといった、多くの実践的なプロセスを通じてすべての包括的な体験が可能な素晴らしい一冊。もし実践的なタッチですぐに始められるものを探しているのであれば、Jamesの本を読むべきである。
 
-[Jeremy D. Miller's Blog](http://codebetter.com/blogs/jeremy.miller/)  
-Although he is not that active anymore, in the last couple of years he has written some excellent blog posts on Test Driven Development, Design Patterns and design principles. I've learned a lot from his real-life and practical insights.
+[Applying Domain Driven-Design and Patterns: With Examples in C# and .NET](http://www.amazon.com/Applying-Domain-Driven-Design-Patterns-Examples/dp/0321268202) (Jimmy Nilsson)
+この本は私が、ドメイン駆動設計とテスト駆動開発の両方に興味を持ち始めた本。私がもう数年早く読んでいたかった本のひとつだ。そうすれば私の多くのミステイクから救ってくれただろう。
 
-[LINQ Framework Design Guidelines](http://blogs.msdn.com/b/mirceat/archive/2008/03/13/linq-framework-design-guidelines.aspx)  
-A set of rules and recommendations that you should adhere to when creating your own implementations of IQueryable.
+[Jeremy D. Miller’s Blog](http://codebetter.com/blogs/jeremy.miller/)
+彼はもうアクティブではないが、過去数年でテスト駆動開発、デザインパターン、デザイン原則に関する優れた記事を書いている。私は彼の実生活と実践的見解から多くのことを学んだ。
 
-[Best Practices for c# async/await](http://code.jonwagner.com/2012/09/06/best-practices-for-c-asyncawait/)  
-The rationale and source of several of the new guidelines in this documented, written by [Jon Wagner](https://twitter.com/jonwagnerdotcom).
+[LINQ Framework Design Guidelines](http://blogs.msdn.com/b/mirceat/archive/2008/03/13/linq-framework-design-guidelines.aspx)
+IQueryable<T>を実装するときに遵守すべきルールのセットと推奨。
+
+[Best Practices for c# async/await](http://code.jonwagner.com/2012/09/06/best-practices-for-c-asyncawait/)
+[Jon Wagner](https://twitter.com/jonwagnerdotcom)が書いた文書が、このドキュメントの論理的根拠と新しいガイドラインのもとになっている。
