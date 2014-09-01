@@ -2,18 +2,18 @@
 NOTE: Requires Markdown Extra. See http://michelf.ca/projects/php-markdown/extra/
  --> 
 
-#Layout Guidelines
+#レイアウトガイドライン
 
-### Use a common layout  (AV2400) ![](images/1.png)
+### 一般的なレイアウトを使用する (AV2400) ![](images/1.png)
 
-- Keep the length of each line under 130 characters.
-- Use an indentation of 4 whitespaces, and don't use tabs
-- Keep one whitespace between keywords like `if` and the expression, but don't add whitespaces after ( and before ) such as: `if (condition == null)`.
-- Add a whitespace around operators, like `+`, `-`, `==`, etc.
-- Always succeed the keywords `if`, `else`, `do`, `while`, `for` and `foreach`, with opening and closing parentheses, even though the language does not require it. 
-- Always put opening and closing parentheses on a new line.
-- Don't indent object Initializers and initialize each property on a new line, so use a format like this: 
-	
+- 1行を130文字以内に抑える
+- 4文字の空白インデントを使用して、タブを使用しない
+- ifと式の間のようにキーワード間に空白をひとつ入れるが、`if (condition == null)` のようにその前後には空白を追加しない
+- `+`、`-`、`==`など、演算子の周りに空白を追加する
+- 言語的に必要なかったとしても、`if`、 `else`、 `do`、 `while`、 `for`、 `foreach`などに開始と終了の括弧を置いて、常にキーワードを成功させる。
+- 開始と終了の括弧は常に新しい行に置く
+- オブジェクト初期化子と各プロパティの初期化は、以下のようにインデントせず、新しい行に書く:
+
 		var dto = new ConsumerDto()
 		{  
 			Id = 123,  
@@ -21,53 +21,57 @@ NOTE: Requires Markdown Extra. See http://michelf.ca/projects/php-markdown/extra
 			PartnerShip = PartnerShip.Gold
 		}
 
-- Don't indent lambda statements and use a format like this:
+
+
+- ブロックを持つラムダ式は、インデントせず、以下のように書く:
+
 
 		methodThatTakesAnAction.Do(x =>
 		{ 
-			// do something like this 
+			// なにかする
 		}
 
-- Put the entire LINQ statement on one line, or start each keyword at the same indentation, like this:
-		
+- クエリ式は、以下のように全体を1行にするか、各キーワードを同じインデントにする:
+
 		var query = from product in products where product.Price > 10 select product;
 
-  	or
+  	または、
 	
 		var query =  from product in products  where product.Price > 10  select product;
 
-- Start the LINQ statement with all the `from` expressions and don't interweave them with where restrictions.
-- Add braces around every comparison condition, but don't add braces around a singular condition. For example `if (!string.IsNullOrEmpty(str) && (str != "new"))`
-- Add an empty line between multi-line statements, between members, after the closing parentheses, between unrelated code blocks, around the `#region` keyword, and between the `using` statements of different companies.
+- LINQステートメントは必ず、`from` 句から始めて、`where`句でそれを混ぜ込まない
+- すべての比較条件の周りに括弧を追加するが、単数の条件の周りには括弧を追加しない。例えば、
+ `if (!string.IsNullOrEmpty(str) && (str != "new"))`
+- 複数行のステートメントの間、メンバーの間、閉じ括弧の後、無関係のコードブロック、`#region`キーワードの周り、異なる会社の`using`ステートメントの間には空行を追加する。
 
-### Order and group namespaces according the company  (AV2402) ![](images/3.png)
+### 企業ごとの名前空間の並び順とグループ (AV2402) ![](images/3.png)
 
-	// Microsoft namespaces are first
+	// Microsoft 名前空間を最初にする
 	using System;
 	using System.Collections;
 	using System.XML;
 	
-	// Then any other namespaces in alphabetic order
+	// その後、他の名前空間をアルファベット順に
 	using AvivaSolutions.Business;
 	using AvivaSolutions.Standard;
 	using Telerik.WebControls;
 	using Telerik.Ajax;
 
-### Place members in a well-defined order  (AV2406) ![](images/1.png)
-Maintaining a common order allows other team members to find their way in your code more easily. In general, a source file should be readable from top to bottom, as if you are reading a book. This prevents readers from having to browse up and down through the code file.
+### メンバーを適切に定義された並び順にする (AV2406) ![](images/1.png)
+共通の並び順を維持することで、他のチームメンバーが簡単にコードで目的のものを見つけることができる。一般的にソースファイルは、本を読むように上から下に読むことができるべきである。これは読者がコードファイルで上下に行き来しなければいけない状況を防ぐ。
 
-1. Private fields and constants (in a region)
-2. Public constants
-3. Public read-only static fields
-4. Factory Methods
-5. Constructors and the Finalizer
-6. Events 
-7. Public Properties
-8. Other methods and private properties in calling order
+1.	privateフィールドと（領域の）定数
+2.	public定数
+3.	public readonly static フィールド
+4.	ファクトリメソッド
+5.	コンストラクターとファイナライザー
+6.	イベント
+7.	publicプロパティ
+8.	呼び出す順で、その他のメソッドとprivateプロパティ
 
-### Be reluctant with `#regions` (AV2407) ![](images/1.png)
-Regions can be helpful, but can also hide the main purpose of a class. Therefore, use `#regions` only for:
+### `#region`を控える (AV2407) ![](images/1.png)
+Regionは便利なときもあるが、クラスの主な目的を隠すこともできてしまう。従って#regionは、以下の目的でのみ使用する:
 
-- Private fields and constants (preferably in a `Private Definitions` region).
-- Nested classes
-- Interface implementations (only if the interface is not the main purpose of that class)
+- `private`フィールドと定数（できればprivate定義region）
+- ネストされたクラス
+- インターフェイスの実装（インターフェイスがそのクラスの主な目的でない場合のみ）
