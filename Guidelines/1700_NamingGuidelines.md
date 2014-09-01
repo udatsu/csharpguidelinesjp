@@ -2,102 +2,110 @@
 NOTE: Requires Markdown Extra. See http://michelf.ca/projects/php-markdown/extra/
  --> 
 
-#Naming Guidelines
+#命名ガイドライン
 
-### Use US-English (AV1701) ![](images/1.png)
+### アメリカ英語を使用する (AV1701) ![](images/1.png)
 
-All type members, parameters and variables should be named using words from the American English language.
+英語を使用する場合、すべての型メンバー、パラメータ、変数はアメリカ英語の単語を使用するべきである。
 
-- Choose easily readable, preferably grammatically correct names. For example, `HorizontalAlignment` is more readable than `AlignmentHorizontal`.
-- Favor readability over brevity. The property name `CanScrollHorizontally` is better than `ScrollableX` (an obscure reference to the X-axis).
-- Avoid using names that conflict with keywords of widely used programming languages.
+- 簡単で読みやすく、文法として正しい名前を選択する。例えば、`HorizontalAlignment`は`AlignmentHorizontal`よりも読みやすい
+- 短さよりも読みやすさを選ぶ。`CanScrollHorizontally`というプロパティ名は`ScrollableX`よりも優れている（X軸はあいまいな参照である）
+- プログラム言語で広く使われているキーワードとの衝突を避ける
 
-**Exception** In most projects, you will use words and phrases from your domain and names specific to your company. Visual Studio's Static Code Analysis will perform a spelling check on all code, so you may need to add those terms to a [Custom Code Analysis Dictionary](http://blogs.msdn.com/fxcop/archive/2007/08/20/new-for-visual-studio-2008-custom-dictionaries.aspx).
+**例外** ほとんどのプロジェクトでは、ドメインや企業に固有の単語やフレーズを使用する。Visual Studioの静的コード分析は、すべてのコードにスペルチェックを実行するため、[カスタムコード分析辞書](http://blogs.msdn.com/fxcop/archive/2007/08/20/new-for-visual-studio-2008-custom-dictionaries.aspx)に用語を追加する必要がある。
 
-### Use proper casing for language elements (AV1702) ![](images/1.png) 
-Language element&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|Casing&nbsp;&nbsp;&nbsp;&nbsp;|Example
+### 言語要素に適したケースを使用する (AV1702) ![](images/1.png) 
+言語要素&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ケース&nbsp;&nbsp;&nbsp;&nbsp;|例
 --------------------|----------|:-----------
-Class, Struct|Pascal|`AppDomain`
-Interface | Pascal | `IBusinessService`
-Enumeration type | Pascal | `ErrorLevel` |
-Enumeration values | Pascal | `FatalError` |
-Event | Pascal | `Click` |
-Private field | Camel | `listItem` |
-Protected field | Pascal | `MainPanel` |
-Const field | Pascal | `MaximumItems` |
-Const variable | Camel | `maximumItems` |
-Read-only static field | Pascal | `RedValue` |
-Variable | Camel | `listOfValues` |
-Method | Pascal | `ToString` |
-Namespace | Pascal | `System.Drawing` |
-Parameter | Camel | `typeName` |
-Type Parameter | Pascal | `TView` |
-Property | Pascal | `BackColor` |
+クラス、構造体|Pascal|`AppDomain`
+インターフェイス | Pascal | `IBusinessService`
+列挙型 | Pascal | `ErrorLevel` |
+列挙値 | Pascal | `FatalError` |
+イベント | Pascal | `Click` |
+Privateフィールド | Camel | `listItem` |
+Protectedフィールド | Pascal | `MainPanel` |
+Constフィールド | Pascal | `MaximumItems` |
+Const変数 | Camel | `maximumItems` |
+Read-only 静的フィールド | Pascal | `RedValue` |
+変数 | Camel | `listOfValues` |
+メソッド | Pascal | `ToString` |
+名前空間 | Pascal | `System.Drawing` |
+パラメータ | Camel | `typeName` |
+型パラメータ | Pascal | `TView` |
+プロパティ | Pascal | `BackColor` |
 
-### Don't include numbers in variables, parameters and type members  (AV1704) ![](images/3.png)
-In most cases they are a lazy excuse for not defining a clear and intention-revealing name.
+### 変数、パラメータ、型メンバーに数字を含めない  (AV1704) ![](images/3.png)
+ほとんどのケースで明確に意図を示さない名前をつけているのは怠けているだけである。
 
-### Don't prefix fields  (AV1705) ![](images/1.png)
+### フィールドにプレフィックスを使用しない  (AV1705) ![](images/1.png)
 
-For example, don't use `g_` or `s_` to distinguish static versus non-static fields. In general, a method in which it is difficult to distinguish local variables from member fields is too big. Examples of incorrect identifier names are: `_currentUser`, `mUserName`, `m_loginTime`.
+例えば、静的フィールドかどうかを区別するために`g_`や`s_`を使用してはいけない。一般的にローカル変数かメンバー変数かの区別がつかない場合、大きすぎることが多い。正しくない識別子名には次のようなものがある: `_currentUser`, `mUserName`, `m_loginTime`
 
-### Don't use abbreviations  (AV1706) ![](images/2.png)
-For example, use `OnButtonClick` rather than `OnBtnClick`. Avoid single character variable names, such as `i` or `q`. Use `index` or `query` instead.
+### 略称を使用しない (AV1706) ![](images/2.png)
 
-**Exceptions** Use well-known abbreviations that are widely accepted or well-known within the domain you work. For instance, use `UI` instead of `UserInterface`.
+例えば、`OnBtnClick`ではなく`OnButtonClick`を使用する。一文字の変数名を避け、`i`や`q`ではなく、`index`や`query`を使用する。
 
-### Name a member, parameter or variable according its meaning and not its type  (AV1707) ![](images/2.png)
-- Use functional names. For example, `GetLength` is a better name than `GetInt`.
-- Don't use terms like `Enum`, `Class` or `Struct` in a name.
-- Identifiers that refer to a collection type should have a plural name.
+**例外** あなたの領域（ドメイン）で広く受け入れられて、よく知られている略称。例えば、`UserInterface`ではなく`UI`など。 
 
-### Name types using nouns, noun phrases or adjective phrases  (AV1708) ![](images/2.png)
-Bad examples include `SearchExamination` (a page for searching for examinations), `Common` (does not end with a noun, and does not explain its purpose) and `SiteSecurity` (although the name is technically okay, it does not say anything about its purpose). Good examples include `BusinessBinder`, `SmartTextBox`, or `EditableSingleCustomer`.
+### メンバー、パラメータ、変数には、型ではなく意味に応じた名前をつける (AV1707) ![](images/2.png)
 
-Don't include terms like `Utility` or `Helper` in classes. Classes with a name like that are usually static classes and get introduced without considering the object-oriented principles (see also AV1008).
+- 機能名を使用する。例えば、`GetInt`ではなく`GetLength`を使用する。
+- 名前に`Enum`、`Class`、 `Struct`のような用語を使用しない。
+- コレクション型の識別子には、複数形の名前をつける。
 
-### Name generic type parameters with descriptive names  (AV1709) ![](images/2.png)
-- Always prefix descriptive type parameter names with the letter `T`.
-- Always use a descriptive names unless a single-letter name is completely self-explanatory and a longer name would not add value. Use the single letter `T` as the type parameter in that case.
-- Consider indicating constraints placed on a type parameter in the name of parameter. For example, a parameter constrained to `ISession` may be called `TSession`.
+### 型名には、名詞、名詞句、形容詞句を使用する (AV1708) ![](images/2.png)
 
-### Don't repeat the name of a class or enumeration in its members  (AV1710) ![](images/1.png)
+悪い例として`SearchExamination`（検査するため検索ページ）、`Common`（名詞で終わらない、目的を説明していない) 、`SiteSecurity` （名前は技術的にはOKだが、目的についてなにも説明していない)があげられる。よい例としては、`BusinessBinder`、`SmartTextBox`、`EditableSingleCustomer`がある。
+
+クラスに`Utility`や`Helper`などの用語は使用しない。このようなクラスは通常、静的クラスであり、オブジェクト指向の原則(AV1008も参照)を考慮していない。
+
+### ジェネリック型パラメータには説明的な名前を使用する (AV1709) ![](images/2.png)
+
+- 常にパラメータ名のプレフィックスに`T`を使用する
+- 一文字の名前が完全にそれを説明しない限り常に説明的な名前を使用し、長い名前に価値がない場合は、ひともじ`T`を型パラメータとして使用する。
+- 型パラメータの名前には、設定された制約を示す名前を検討する。例えば、`ISession`の制約があるパラメータは`TSession`と呼ばれる。
+
+### クラスや列挙型のメンバーは、名前を繰り返えさない  (AV1710) ![](images/1.png)
 
 	class Employee
 	{
-		// Wrong!
+		// 誤り!
 		static GetEmployee() {}
 		DeleteEmployee() {}
 		
-		// Right
+		// 正しい
 		static Get() {...}
 		Delete() {...}
 		
-		// Also correct.
+		// これも正しい
 		AddNewJob() {...}
 		RegisterForMeeting() {...}
 	}
 
-### Name members similarly to members of related .NET Framework classes  (AV1711) ![](images/3.png)
+### メンバー名は、関連する.NET Frameworkクラスのメンバーと同様にする (AV1711) ![](images/3.png)
 
-.NET developers are already accustomed to the naming patterns the framework uses, so following this same pattern helps them find their way in your classes as well. For instance, if you define a class that behaves like a collection, provide members like `Add`, `Remove` and `Count` instead of `AddItem`, `Delete` or `NumberOfItems`.
+.NET開発者はすでにフレームワークユーザーのパターンになれているため、同じパターンのものはあなたのクラスの助けになるだろう。例えば、コレクションのように振る舞うクラスを定義した場合、`AddItem`、`Delete`、`NumberOfItems`ではなく、`Add`、`Remove`、`Count`のようなメンバーを提供する。
 
-### Avoid short names or names that can be mistaken with other names  (AV1712) ![](images/1.png)
-Although technically correct, the following statement can be quite confusing.
+### 短い名前や他の名前と間違えられることがある名前は避ける (AV1712) ![](images/1.png)
+
+以下のステートメントは、技術的には正しいが混乱する可能性が非常に高い
 
 	bool b001 = (lo == l0) ? (I1 == 11) : (lOl != 101);
 
-### Properly name properties  (AV1715) ![](images/2.png)
-- Do name properties with nouns, noun phrases, or occasionally adjective phrases. 
-- Do name boolean properties with an affirmative phrase. E.g. `CanSeek` instead of `CantSeek`.
-- Consider prefixing boolean properties with `Is`, `Has`, `Can`, `Allows`, or `Supports`.
-- Consider giving a property the same name as its type. When you have a property that is strongly typed to an enumeration, the name of the property can be the same as the name of the enumeration. For example, if you have an enumeration named `CacheLevel`, a property that returns one of its values can also be named `CacheLevel`.
+### プロパティ名を適切につける (AV1715) ![](images/2.png)
 
-### Name methods using verb-object pair  (AV1720) ![](images/2.png)
-Name methods using a verb-object pair such as `ShowDialog`. A good name should give a hint on the _what_ of a member, and if possible, the _why_. Also, don't include `And` in the name of the method. It implies that the method is doing more than one thing, which violates the single responsibility principle explained in AV1115.
+- プロパティ名には、名詞、名詞句、ときどき形容詞句を使用する
+- Booleanプロパティには肯定的なフレーズを使用する。例えば`CantSeek`ではなく`CanSeek`
+- Booeanプロパティには、`Is`、 `Has`、 `Can`、 `Allows`、`Supports`などのプレフィックスを検討する
+- 型と同じ名前のプロパティを検討する。列挙型に強い型付けされているプロパティは、列挙型と同じ名前を使用することができる。例えば、`CacheLevel`という名前の列挙型がある場合、その中のひとつの値を返すプロパティ名も`CacheLevel`にすることができる
 
-### Name namespaces using names, layers, verbs and features  (AV1725) ![](images/3.png)
-For instance, the following namespaces are good examples of that guideline.
+### 動詞と目的語をペアにしたメソッド名を使用する (AV1720) ![](images/2.png)
+
+`ShowDialog`のように動詞-目的語をペアにしたメソッド名を使用する。よい名前は、メンバーを「どうする(_What_)」かのヒントを与えるべきであり、可能であれば、「なぜ(_Why_)」も含める。また、メソッド名には`And`を含めてはいけない。これは、メソッドがひとつ以上のことをしていることを暗示しており、AV1115で説明されている単一責任の原則に違反している。
+
+### 名前空間名には、名前、レイヤ、動詞、機能を使用する (AV1725) ![](images/3.png)
+
+例えば、以下の名前空間はこのガイドラインのよい例である。
 
 	AvivaSolutions.Commerce.Web
 	NHibernate.Extensibility
@@ -106,32 +114,37 @@ For instance, the following namespaces are good examples of that guideline.
 	FluentAssertion.Primitives
 	CaliburnMicro.Extensions
 
-**Note** Never allow namespaces to contain the name of a type, but a noun in its plural form, e.g. `Collections`, is usually okay.
+**Note** 名前空間には型の名前を含めてはいけないが、複数形の名詞、例えば `Collections`は通常OKである。
 
-### Use a verb or verb phrase to name an event  (AV1735) ![](images/2.png)
-Name events with a verb or a verb phrase. For example: `Click`, `Deleted`, `Closing`, `Minimizing`, and `Arriving`. For example, the declaration of the `Search` event may look like this:
+### イベント名には、動詞か動詞句を使用する (AV1735) ![](images/2.png)
+
+イベント名には、動詞か動詞句を使用する。例えば: `Click`、 `Deleted`、 `Closing`、 `Minimizing`、`Arriving`。例えば、`Search`イベントは以下のように宣言される: 
 
 	public event EventHandler<SearchArgs> Search;
 
-### Use `-ing` and `-ed` to express pre-events and post-events  (AV1737) ![](images/3.png)
-For example, a close event that is raised before a window is closed would be called `Closing` and one that is raised after the window is closed would be called `Closed`. Don't use `Before` or `After` prefixes or suffixes to indicate pre and post events.
+### 事前イベントと事後イベントには、`-ing` と `-ed` を使用する (AV1737) ![](images/3.png)
 
-Suppose you want to define events related to the deletion process of an object. Avoid defining the `Deleting` and `Deleted` events as `BeginDelete` and `EndDelete`. Define those events as follows:
+例えば、ウィンドウが閉じる前に発生する`close`イベントは、`Closing`と呼ばれ、ウィンドウが閉じた後で発生するイベントは、`Closed`と呼ばれる。事前、または事後イベントを示すために`Before`や`After`プレフィックスやサフィックスを使用してはいけない。
+オブジェクトを削除するプロセスに関するイベントを定義したいとする。`Deleting`と`Deleted`イベントを`BeginDelete`と`EndDelete`としてイベントを定義するのは避ける。
 
-- `Deleting`: Occurs just before the object is getting deleted
-- `Delete`: Occurs when the object needs to be deleted by the event handler.
-- `Deleted`: Occurs when the object is already deleted.
+- `Deleting`: オブジェクトが削除される前に発生する
+- `Delete`:オブジェクトがイベントハンドラで削除される必要がある時に発生する
+- `Deleted`: オブジェクトがすでに削除されたときに発生する
 
-### Prefix an event handler with `On` (AV1738) ![](images/3.png)
-It is good practice to prefix the method that handles an event with `On`. For example, a method that handles the `Closing` event could be named `OnClosing`.
+### イベントハンドラのプレフィックスとして`On`を使用する (AV1738) ![](images/3.png)
 
-### Use an underscore for irrelevant lambda parameters (AV1739) ![](images/3.png)
-If you use a lambda statement, for instance, to subscribe to an event, and the actual parameters of the event are irrelevant, use the following convention to make that more explicit.
+イベントを処理するメソッドには`On`をプレフィックスにするとよい。例えば、`Closing`イベントを処理するメソッド名は`OnClosing`にする。
+
+### 重要でないラムダパラメータにはアンダースコアを使用する (AV1739) ![](images/3.png)
+
+例えば、イベントをサブスクライブするのにラムダステートメントを使用する場合、イベントの実際のパラメータは重要でないことをより明確にするため、以下の規則を使用する。
 
 	button.Click += (\_, \_\_) => HandleClick();
 
-### Group extension methods in a class suffixed with Extensions (AV1745) ![](images/3.png)
-If the name of an extension method conflicts with another member or extension method, you must prefix the call with the class name. Having them in a dedicated class with the `Extensions` suffix improves readability.
+### クラス内の拡張メソッドのグループは、`Extensions`サフィックスを使用する (AV1745) ![](images/3.png)
 
-### Post-fix asynchronous methods with `Async` of `TaskAsync` (AV1755) ![](images/2.png)
-The general convention for methods that return `Task` or `Task<TResult>` is to post-fix them with `Async`, but if such a method already exist, use `TaskAsync` instead.
+拡張メソッドの名前が、他のメンバーや拡張メソッドと競合する場合、クラス名にプレフィックスを付ける必要がある。`Extensions`サフィックスを持つクラスは可読性を向上させる。
+
+### 非同期メソッドの接尾辞には`TaskAsync`または`Async`を使用する (AV1755) ![](images/2.png)
+
+一般的な規約では、`Task`や`Task<TResult>`を返すメソッドは、接尾辞に`Async`を使用するが、そのようなメソッドがすでに存在している場合、代わりに`TaskAsync`を使用する。
